@@ -46,7 +46,7 @@ export default function HomeTables({objectId}:Props) {
   return (
     <>
       { investments.length === 0 ? (
-        <p className="no-result">No investments found</p>
+        <p className="no-result">Инвестиций не найдено</p>
        ): (
         <div className="w-full">
         <UserTable  investments={investments} />
