@@ -88,6 +88,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
               <tr className="w-full flex justify-between py-1 px-2 rounded-xl bg-zinc-600">
                 <th>Дата</th>
                 <th>Инвестиция</th>
+                <th>Баланс</th>
                 <th>Прибль</th>
                 <th>Итого</th>
               </tr>
@@ -101,6 +102,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
       investmentRows.push(
         <tr key={i} className="flex justify-between px-2">
           <td>{endDate}</td>
+          <td>{investment.amount}</td>
           <td className="">{investmentAmount.toFixed(2)}</td>
           <td>{profit.toFixed(2)}</td>
           <td>{total.toFixed(2)}</td>
@@ -115,6 +117,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
           className="flex justify-between text-start mt-4 mb-5 border-b-2 border-stone-300"
         >
           <td>Итого:</td>
+          <td>{investment.amount}</td>
           <td>{totalAmount.toFixed(2)}</td>
           <td>{(totalAmount - investment.amount).toFixed(2)}</td>
           <td>{totalAmount.toFixed(2)}</td>
