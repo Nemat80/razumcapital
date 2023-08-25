@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import UserTable from "../ui/UserTable";
 import { Types } from "mongoose";
 
+
  
 
 interface investments extends Document {

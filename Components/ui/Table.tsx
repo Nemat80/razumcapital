@@ -1,6 +1,16 @@
 import React from "react";
 import { Button } from "./button";
 import {deleteInvestment} from "@/lib/actions/investment.actions";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 
 type InvestmentData = {
@@ -17,7 +27,7 @@ type TableProps = {
 const TableInvestments: React.FC<TableProps> = ({ investments }) => {
   const renderInvestmentRows = (investment: InvestmentData) => {
 
-
+    const data = [];
     const investmentRows = [];
     let totalAmount = 0;
 
@@ -30,18 +40,63 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
       const profit = investmentAmount * 0.05;
       const total = investmentAmount + profit;
 
+      if (i % 6 === 0 || i % 12 === 0 || i === 32) {
+        data.push({
+          date: endDate,
+          Investment: investment.amount.toFixed(2),
+          Profit: profit.toFixed(2),
+          Total: total.toFixed(2),
+        });
+
+        console.log(data);
+      }
+
       if (i === 0) {
-        investmentRows.push (
-          <thead className="w-full">
-          <tr className="flex justify-between py-1 px-4 rounded-xl bg-zinc-600">
-            <th>Дата</th>
-            <th>Инвестиция</th>
-            <th>Баланс</th>
-            <th>Прибль</th>
-            <th>Итого</th>
-          </tr>
-        </thead>
-        )
+        investmentRows.push(
+          <div className="w-full flex flex-col">
+            <h1 className="head-text mb-5 ">Инвестиция : {endDate} </h1>
+            <div className="">
+              <ResponsiveContainer width="100%" height={350} className="">
+                <BarChart data={data}>
+                  <XAxis
+                    dataKey="date"
+                    stroke="#888888"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={true}
+                  />
+                  <YAxis
+                    stroke="#888888"
+                    fontSize={14}
+                    tickLine={true}
+                    axisLine={true}
+                    tickFormatter={(value) => `${value}$`}
+                  />
+                  <Tooltip />
+                  <CartesianGrid />
+                  <Legend />
+                  <Bar
+                    dataKey="Investment"
+                    stackId="a"
+                    fill="green"
+                    radius={[0, 0, 0, 0]}
+                  />
+                  <Bar dataKey="Total" stackId="b" fill="#adfa1d" />
+                  <Bar dataKey="Profit" stackId="b" fill="#f1f230" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <thead className="w-full">
+              <tr className="w-full flex justify-between py-1 px-2 rounded-xl bg-zinc-600">
+                <th>Дата</th>
+                <th>Инвестиция</th>
+                <th>Баланс</th>
+                <th>Прибль</th>
+                <th>Итого</th>
+              </tr>
+            </thead>
+          </div>
+        );
       }
       
 
