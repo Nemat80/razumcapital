@@ -50,12 +50,11 @@ const  UserCard =   ({
           <h4 className="text-base-semibold text-light-1">{personType}</h4> 
         </div>
       </div> 
-
+      <Link href={{ pathname: '/Admin/UserInfo', query: { id } }}>
       <Button className="community-card_btn">
-          <Link href={{ pathname: '/Admin/UserInfo', query: { id } }}>
             Профиль 
-          </Link>
       </Button>
+      </Link>
 
     </article>
   );
