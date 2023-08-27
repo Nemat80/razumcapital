@@ -144,10 +144,10 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
           type="button"
           onClick={toggleShow}
          >
-          Просмотреть Инвестицию
+          Просмотреть 
          </Button>
          <Button onClick={handelClick} className="bg-red-500 mb-4">
-            Удалить инвестицию
+            Удалить 
           </Button>
         </div>
 

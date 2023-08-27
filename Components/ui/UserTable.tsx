@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -11,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { Button } from "./button";
 
 type InvestmentData = {
   id: string;
@@ -25,8 +26,16 @@ type TableProps = {
 
 const UserTable: React.FC<TableProps> = ({ investments }) => {
   const renderInvestmentRows = (investment: InvestmentData) => {
+
+    const [show, setShow] = useState(false);
+    const toggleShow = () => setShow(!show);
+
     const data = [];
     const investmentRows = [];
+    const investmentInfo = [];
+    const investmentDiagram = [];
+
+
     let totalAmount = 0;
 
     for (let i = 0; i < 33; i++) {
@@ -50,9 +59,9 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
       }
 
       if (i === 0) {
-        investmentRows.push(
+        investmentDiagram.push(
           <div className="w-full flex flex-col">
-            <h1 className="head-text mb-5 ">Инвестиция : {endDate} </h1>
+            <h1 className="head-text mb-5 ">{investmentAmount}$ от {endDate} </h1>
             <div className="">
               <ResponsiveContainer width="100%" height={350} className="">
                 <BarChart data={data}>
@@ -84,22 +93,13 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-            <thead className="w-full">
-              <tr className="w-full flex justify-between py-1 px-2 rounded-xl bg-zinc-600">
-                <th>Дата</th>
-                <th>Инвестиция</th>
-                <th>Баланс</th>
-                <th>Прибль</th>
-                <th>Итого</th>
-              </tr>
-            </thead>
           </div>
         );
       }
 
       totalAmount = total;
 
-      investmentRows.push(
+      investmentInfo.push(
         <tr key={i} className="flex justify-between px-2">
           <td>{endDate}</td>
           <td>{investment.amount}</td>
@@ -110,7 +110,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
       );
     }
 
-    investmentRows.push(
+    investmentInfo.push(
       <>
         <tr
           key="total"
@@ -124,6 +124,35 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
         </tr>
       </>
     );
+
+    investmentRows.push(
+      <>
+      <div  className="flex justify-between p-3 items-center ">
+      {investmentDiagram}
+      </div>
+      <Button
+         className="bg-green-400 mb-4"
+          type="button"
+          onClick={toggleShow}
+         >
+          Просмотр ежемесячного отчёта
+         </Button>
+
+        {show ? (<section className="flex flex-col justify gap-3 duration-200">
+        <thead className="w-full">
+              <tr className="w-full flex justify-between py-1 px-2 rounded-xl bg-zinc-600">
+                <th>Дата</th>
+                <th>Инвестиция</th>
+                <th>Баланс</th>
+                <th>Прибль</th>
+                <th>Итого</th>
+              </tr>
+            </thead>
+          {investmentInfo}
+          </section>): null
+        }
+      </>
+    )
 
     return investmentRows;
   };
