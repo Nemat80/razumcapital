@@ -8,6 +8,8 @@ import Bottombar from '@/Components/shared/Bottombar';
 import LeftSidebar from '@/Components/shared/LeftSidebar';
 
 
+
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -23,6 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
+
     <html lang="en">
       <body className={inter.className}>
         <Topbar  />

@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import {
   BarChart,
@@ -12,11 +14,14 @@ import {
 import { Button } from "./button";
 import { deleteInvestment } from "@/lib/actions/investment.actions";
 
+
+
 type InvestmentData = {
   id: string;
   amount: number;
   date: string;
   _id: string;
+  contract: string;
 };
 
 type TableProps = {
@@ -26,6 +31,17 @@ type TableProps = {
 const TableInvestments: React.FC<TableProps> = ({ investments }) => {
   const renderInvestmentRows = (investment: InvestmentData) => {
 
+
+    const handleDownload = () => {
+      const fileName = investment.contract;
+      const pdfUrl = `/contracts/${fileName}`;
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = fileName;
+      link.click();
+    };
+    
+    
 
     const [show, setShow] = useState(false);
     const toggleShow = () => setShow(!show);
@@ -118,6 +134,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
 
     const handelClick = async () => {
       await deleteInvestment(investment._id);
+    
       window.location.reload();
     };
 
@@ -139,6 +156,11 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
       <>
        <div  className="flex justify-between p-3 items-center rounded border border-current flex">
          <h1 className="text-body-bold"> {investment.amount }$ от {investment.date} </h1>
+         <button 
+          onClick={handleDownload}
+         >
+         Скачать договор
+         </button>
          <Button
          className="bg-green-400 mb-4"
           type="button"

@@ -1,6 +1,6 @@
 "use client";
 
-import {  useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/Components/ui/button";
@@ -18,14 +18,12 @@ import { usePathname } from "next/navigation";
 
 import { InvestmentValidation } from "@/lib/validations/investment";
 import { createInvestment } from "@/lib/actions/investment.actions";
-import { useEffect, useState } from "react";
-import {  findInvestmentsByUserId} from "@/lib/actions/user.actions";
+import { useEffect, useState, ChangeEvent } from "react";
+import { findInvestmentsByUserId } from "@/lib/actions/user.actions";
 import { Document, Types } from "mongoose";
 import TableInvestments from "@/Components/ui/Table";
 import ProfileHeader from "@/Components/shared/ProfileHeader";
 import { useRouter } from "next/navigation";
-
-
 
 
 
@@ -34,50 +32,73 @@ interface investments extends Document {
   amount: number;
   investor: Types.ObjectId;
   date: string;
-  _id:string
+  _id: string;
+  contract: string;
 }
-
-
 
 export default function UserInfo() {
 
-
-    const router = useRouter()
-    const pathname = usePathname();
-
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const user = searchParams.get("id");
   if (!user) return null;
-
   const objectId = String(user);
 
-
-  
   const form = useForm({
     resolver: zodResolver(InvestmentValidation),
     defaultValues: {
       amount: 0,
       investor: objectId,
       date: "",
+      contract: "",
     },
   });
 
+
+
+  const [file, setFile] = useState<File>()
+
+
+  
   const onSubmit = async (values: z.infer<typeof InvestmentValidation>) => {
-    await createInvestment({
-      amount: values.amount,
-      investor: user,
-      date: values.date,
-      path: pathname,
-    });
+
+    if (!file) return;
+
+   try {
+   const data = new FormData();
+   data.set('file', file);
+
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    body: data
+  });
+  if (!res.ok) throw new Error(await res.text());
+
+  const { path: contractUrl } = await res.json();
+
+  await createInvestment({
+    amount: values.amount,
+    investor: user,
+    date: values.date,
+    path: pathname,
+    contract: contractUrl,
+  });
+
 
     form.reset({
       amount: 0,
       investor: objectId,
       date: "",
+      contract: "",
     });
-    window.location.reload()
-  };
 
+  } catch (e: any) {
+    console.error(e)
+  }
+    
+    window.location.reload();
+  };
 
   const [investments, setInvestments] = useState<investments[]>([]);
 
@@ -86,7 +107,6 @@ export default function UserInfo() {
       try {
         const userInvestments = await findInvestmentsByUserId(user);
         setInvestments(userInvestments);
-
       } catch (error) {
         console.error("Failed to fetch user investments:", error);
       }
@@ -95,26 +115,24 @@ export default function UserInfo() {
     fetchInvestments();
   }, []);
 
-
-
   return (
     <>
       <div className="flex flex-col  justify-center items-center">
         <div className="flex items-center gap-4 border-b-2 border-stone-500  mb-5 pb-3 w-full">
-            <Button  className="bg-primary-500" onClick={router.back}>
-                Назад
-            </Button>
-        <h1 className="head-text">
-            Профиль 
-        </h1>   
-            <ProfileHeader objectId={objectId} />
+          <Button className="bg-primary-500" onClick={router.back}>
+            Назад
+          </Button>
+          <h1 className="head-text">Профиль</h1>
+          <ProfileHeader objectId={objectId} />
         </div>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col w-3/6 justify-start gap-10 border border-dark-4 p-4"
           >
-            <legend className="text-center text-light-2">Добавить инвестицию</legend>
+            <legend className="text-center text-light-2">
+              Добавить инвестицию
+            </legend>
             <FormField
               control={form.control}
               name="amount"
@@ -155,6 +173,27 @@ export default function UserInfo() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="contract"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full gap-3">
+                  <FormLabel className="text-base-semibold text-light-2">
+                    Договор
+                  </FormLabel>
+                  <FormControl className="no-focus border border-dark-4">
+                    <Input
+                      type="file"
+                      placeholder="Зашрузите договор"
+                      className="account-form_input no-focus text-light-2"
+                      required
+                      onChange={(e) => setFile(e.target.files?.[0])}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <Button type="submit" className="bg-green-500">
               Добавить
@@ -162,14 +201,13 @@ export default function UserInfo() {
           </form>
         </Form>
 
-
-       { investments.length === 0 ? (
-        <p className="no-result">Инвестиций не найдено</p>
-       ): (
-        <div className="w-full">
-        <TableInvestments investments={investments} />
-        </div>
-       )}
+        {investments.length === 0 ? (
+          <p className="no-result">Инвестиций не найдено</p>
+        ) : (
+          <div className="w-full">
+            <TableInvestments investments={investments} />
+          </div>
+        )}
       </div>
     </>
   );

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import Investment from "../models/Investment.model";
 import User from "../models/user.model";
 import { connectToDB } from "./mongoose";
-import { NextApiRequest, NextApiResponse } from "next";
+
 
 
 interface Params {
@@ -12,12 +12,13 @@ interface Params {
     investor: string,
     date: string,
     path: string,
+    contract:string
 }
 
 
 
 
-export async function createInvestment({amount, investor,date, path}: Params) {
+export async function createInvestment({ amount, investor, date, contract, path }: Params) {
 
     try {
 
@@ -27,6 +28,7 @@ export async function createInvestment({amount, investor,date, path}: Params) {
             amount,
             investor,
             date,
+            contract,
         });
     
         await User.findByIdAndUpdate(investor,{
