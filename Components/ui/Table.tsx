@@ -13,6 +13,9 @@ import {
 } from "recharts";
 import { Button } from "./button";
 import { deleteInvestment } from "@/lib/actions/investment.actions";
+import { saveAs } from 'file-saver';
+
+
 
 
 
@@ -32,19 +35,20 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
   const renderInvestmentRows = (investment: InvestmentData) => {
 
 
-    const handleDownload = () => {
-      const fileName = investment.contract;
-      const pdfUrl = `/contracts/${fileName}`;
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.download = fileName;
-      link.click();
-    };
-    
-    
-
     const [show, setShow] = useState(false);
     const toggleShow = () => setShow(!show);
+
+
+    const handleDownload = async () => {
+      try {
+        const response = await fetch(investment.contract);
+        const blob = await response.blob();
+        saveAs(blob, 'contract.pdf');
+      } catch (error) {
+        console.error('Ошибка при загрузке файла', error);
+      }
+    };
+  
 
     const investmentRows = [];
     const investmentInfo = [];
@@ -157,7 +161,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
        <div  className="flex justify-between p-3 items-center rounded border border-current flex">
          <h1 className="text-body-bold"> {investment.amount }$ от {investment.date} </h1>
          <button 
-          onClick={handleDownload}
+         onClick={handleDownload}
          >
          Скачать договор
          </button>

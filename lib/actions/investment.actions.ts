@@ -66,11 +66,13 @@ export async function fetchInvestments(pageNumber = 1, pageSize = 20) {
 }
     
 
+
 export async function deleteInvestment(id: string): Promise<void> {
     try {
       connectToDB();
   
       const investment = await Investment.findById(id);
+  
 
       await Investment.deleteOne({_id:id})
   
@@ -79,7 +81,7 @@ export async function deleteInvestment(id: string): Promise<void> {
       }
   
     } catch (error: any) {
-      throw new Error(`Failed to delete thread: ${error.message}`);
+      throw new Error(`Failed to delete investment: ${error.message}`);
     }
   }
   

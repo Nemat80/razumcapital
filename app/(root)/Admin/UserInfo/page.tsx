@@ -24,8 +24,8 @@ import { Document, Types } from "mongoose";
 import TableInvestments from "@/Components/ui/Table";
 import ProfileHeader from "@/Components/shared/ProfileHeader";
 import { useRouter } from "next/navigation";
-
-
+import { useUploadThing, uploadFiles } from "@/lib/uploadthing";
+import { isBase64Pdf } from "@/lib/utils";
 
 interface investments extends Document {
   id: string;
@@ -37,7 +37,6 @@ interface investments extends Document {
 }
 
 export default function UserInfo() {
-
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -55,36 +54,33 @@ export default function UserInfo() {
     },
   });
 
+  const [file, setFile] = useState<File[]>([]);
+  const { startUpload } = useUploadThing("file");
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [file, setFile] = useState<File>()
-
-
-  
   const onSubmit = async (values: z.infer<typeof InvestmentValidation>) => {
+    setIsSubmitting(true);
 
-    if (!file) return;
+    const blob = values.contract;
 
-   try {
-   const data = new FormData();
-   data.set('file', file);
+    const hasPdfChanged = isBase64Pdf(blob);
 
-  const res = await fetch('/api/upload', {
-    method: 'POST',
-    body: data
-  });
-  if (!res.ok) throw new Error(await res.text());
+    if (hasPdfChanged) {
+      const pdfRes = await startUpload(file);
 
-  const { path: contractUrl } = await res.json();
+      if (pdfRes && pdfRes[0].fileUrl) {
+        values.contract = pdfRes[0].fileUrl;
+      }
+    }
 
-  await createInvestment({
-    amount: values.amount,
-    investor: user,
-    date: values.date,
-    path: pathname,
-    contract: contractUrl,
-  });
-
+    await createInvestment({
+      amount: values.amount,
+      investor: user,
+      date: values.date,
+      path: pathname,
+      contract: values.contract,
+    });
 
     form.reset({
       amount: 0,
@@ -93,11 +89,30 @@ export default function UserInfo() {
       contract: "",
     });
 
-  } catch (e: any) {
-    console.error(e)
-  }
-    
     window.location.reload();
+  };
+
+  const handleFileChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldChange: (value: string) => void
+  ) => {
+    e.preventDefault();
+
+    const fileReader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFile(Array.from(e.target.files));
+
+      if (!file.type.includes("pdf")) return;
+
+      fileReader.onload = async (event) => {
+        const PdfDataUrl = event.target?.result?.toString() || "";
+        fieldChange(PdfDataUrl);
+      };
+
+      fileReader.readAsDataURL(file);
+    }
   };
 
   const [investments, setInvestments] = useState<investments[]>([]);
@@ -185,9 +200,9 @@ export default function UserInfo() {
                     <Input
                       type="file"
                       placeholder="Зашрузите договор"
-                      className="account-form_input no-focus text-light-2"
+                      className="border border-dark-4 bg-dark-3 no-focus text-light-2 file:text-blue"
                       required
-                      onChange={(e) => setFile(e.target.files?.[0])}
+                      onChange={(e) => handleFileChange(e, field.onChange)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -195,9 +210,22 @@ export default function UserInfo() {
               )}
             />
 
-            <Button type="submit" className="bg-green-500">
-              Добавить
-            </Button>
+            {isSubmitting ? (
+              <Button className="bg-green-500">
+                <div
+                  className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                >
+                  <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                    Loading...
+                  </span>
+                </div>
+              </Button>
+            ) : (
+              <Button type="submit" className="bg-green-500">
+                Добавить
+              </Button>
+            )}
           </form>
         </Form>
 
