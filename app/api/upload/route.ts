@@ -13,17 +13,9 @@ export async function POST(request: NextRequest) {
   const buffer = Buffer.from(bytes);
 
   const fileName = file.name;
-  const filePath = `./public/contracts/${fileName}`;
+  const filePath = `public/contracts/${fileName}`;
 
   await writeFile(filePath, buffer);
-
-  // Конструируем URL-адрес файла на основе его имени или идентификатора
-  // const baseUrl = 'http://localhost:3000';
-  // const fileUrl = `${baseUrl}/Admin/${encodeURIComponent(fileName)}`;
-
-
-
-
   return NextResponse.json({ path: fileName });
 
 }
