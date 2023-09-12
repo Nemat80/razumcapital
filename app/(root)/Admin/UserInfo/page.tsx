@@ -204,7 +204,7 @@ export default function UserInfo() {
                       required
                       onChange={(e) => handleFileChange(e, field.onChange)}
                     />
-                  </FormControl>
+                  </FormControl> 
                   <FormMessage />
                 </FormItem>
               )}
