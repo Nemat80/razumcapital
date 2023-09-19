@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import Investment from "../models/Investment.model";
 import User from "../models/user.model";
 import { connectToDB } from "./mongoose";
-
+import { utapi } from "uploadthing/server";
 
 
 interface Params {
@@ -70,7 +70,7 @@ export async function fetchInvestments(pageNumber = 1, pageSize = 20) {
 export async function deleteInvestment(id: string): Promise<void> {
     try {
       connectToDB();
-  
+
       const investment = await Investment.findById(id);
   
 
@@ -84,4 +84,6 @@ export async function deleteInvestment(id: string): Promise<void> {
       throw new Error(`Failed to delete investment: ${error.message}`);
     }
   }
+
+
   

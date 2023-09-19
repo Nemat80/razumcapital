@@ -12,12 +12,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Button } from "./button";
+import { saveAs } from 'file-saver';
 
 type InvestmentData = {
   id: string;
   amount: number;
   date: string;
   _id: string;
+  contract:string;
 };
 
 type TableProps = {
@@ -26,6 +28,18 @@ type TableProps = {
 
 const UserTable: React.FC<TableProps> = ({ investments }) => {
   const renderInvestmentRows = (investment: InvestmentData) => {
+
+
+
+    const handleDownload = async () => {
+      try {
+        const response = await fetch(investment.contract);
+        const blob = await response.blob();
+        saveAs(blob, `contract.pdf`);
+      } catch (error) {
+        console.error('Ошибка при загрузке файла', error);
+      }
+    };
 
     const [show, setShow] = useState(false);
     const toggleShow = () => setShow(!show);
@@ -130,6 +144,12 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
       <div  className="flex justify-between p-3 items-center ">
       {investmentDiagram}
       </div>
+      <Button 
+          className="bg-yellow-300"
+         onClick={handleDownload}
+         >
+         Скачать договор
+         </Button>
       <Button
          className="bg-green-400 mb-4"
           type="button"

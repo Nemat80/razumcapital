@@ -27,7 +27,7 @@ export default async function Home() {
   return (
     <>
     <div className="w-full flex flex-col" >
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-4 border-b-2 border-stone-300  mb-5 pb-3 w-full">
         <h2 className="head-text">Панель инвестиций</h2>
         <div className="">
         {userInfo?.role === "ADMIN" ? (

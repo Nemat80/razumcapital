@@ -24,7 +24,7 @@ import { Document, Types } from "mongoose";
 import TableInvestments from "@/Components/ui/Table";
 import ProfileHeader from "@/Components/shared/ProfileHeader";
 import { useRouter } from "next/navigation";
-import { useUploadThing, uploadFiles } from "@/lib/uploadthing";
+import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Pdf } from "@/lib/utils";
 
 interface investments extends Document {
