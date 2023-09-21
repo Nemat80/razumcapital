@@ -155,7 +155,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
           type="button"
           onClick={toggleShow}
          > 
-          Просмотр ежемесячного отчёта
+          Просмотр ежемесячного отчёта 
          </Button>
 
         {show ? (<section className="flex flex-col justify gap-3 duration-200">
