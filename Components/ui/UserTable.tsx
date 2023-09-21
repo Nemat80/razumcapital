@@ -150,7 +150,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
          >
          Скачать договор
          </Button>
-      <Button
+      <Button 
          className="bg-green-400 mb-4"
           type="button"
           onClick={toggleShow}
