@@ -4,33 +4,16 @@ export  const sidebarLinks = [
       route: "/",
       label: "Главная",
     },
-    // {
-    //   imgURL: "/assets/user.svg",
-    //   route: "/profile",
-    //   label: "Profile",
-    // },
+    {
+      imgURL: "/assets/user.svg",
+      route: "/profile",
+      label: "Профиль",
+    },
     // {
     //   imgURL: "/assets/community.svg",
     //   route: "/Users",
     //   label: "Users",
     // },
-  ];
-  export const AdminSidebarLinks = [
-    {
-      imgURL: "/assets/home.svg",
-      route: "/",
-      label: "Home",
-    },
-    {
-      imgURL: "/assets/community.svg",
-      route: "/Users",
-      label: "Users",
-    },
-    {
-      imgURL: "/assets/user.svg",
-      route: "/ profile",
-      label: "Profile",
-    },
   ];
   
   export const profileTabs = [

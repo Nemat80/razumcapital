@@ -17,9 +17,7 @@ import * as z from "zod";
 import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { updateUser } from "@/lib/actions/user.actions";
-import { usePathname, useRouter} from "next/navigation"
-
-
+import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
   user: {
@@ -30,12 +28,16 @@ interface Props {
     bio: string;
     image: string;
     role: string;
+    mail: string;
+    tel: string;
+    city: string;
+    passport_series: string;
+    passport_number: string;
+    cardNumber: string;
   };
-
-  btnTitle: string;
 }
 
-const AccountProfile = ({ user, btnTitle }: Props) => {
+const AccountProfile = ({ user }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const router = useRouter();
@@ -47,26 +49,37 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       name: user?.name || "",
       lastname: user?.lastname || "",
       bio: user?.bio || "",
+      mail: "",
+      tel: "",
+      city: "",
+      passport_series: "",
+      passport_number: "",
+      cardNumber: "",
     },
   });
 
-
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     const blob = values.profile_photo;
-    
+
     await updateUser({
       userId: user.id,
       lastname: values.lastname,
       name: values.name,
-      bio:values.bio,
+      bio: values.bio,
       image: values.profile_photo,
       path: pathname,
-      role: user.role
-    })
-    if(pathname === '/profile/edit') {
+      role: user.role,
+      mail: values.mail,
+      tel: values.tel,
+      city: values.city,
+      passport_series: values.passport_series,
+      passport_number: values.passport_number,
+      cardNumber: values.cardNumber,
+    });
+    if (pathname === "/profile/edit") {
       router.back();
-    }else {
-      router.push('/')
+    } else {
+      router.push("/");
     }
   };
 
@@ -138,13 +151,14 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
-            name="name"
+            name="lastname"
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-3">
                 <FormLabel className="text-base-semibold text-light-2">
-                  Name
+                  Фамилия
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -157,14 +171,13 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
-            name="lastname"
+            name="name"
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-3">
                 <FormLabel className="text-base-semibold text-light-2">
-                lastname
+                  Имя
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -184,11 +197,130 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-3">
                 <FormLabel className="text-base-semibold text-light-2">
-                  Bio
+                  Отчество
+                </FormLabel>
+                <FormControl>
+                  <Input className="account-form_input no-focus" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="mail"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full gap-3">
+                <FormLabel className="text-base-semibold text-light-2">
+                  Почта (Email)
                 </FormLabel>
                 <FormControl>
                   <Input
                     className="account-form_input no-focus"
+                    type="email"
+                    placeholder="some@mail.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="tel"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full gap-3">
+                <FormLabel className="text-base-semibold text-light-2">
+                  Номер телефона
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="account-form_input no-focus"
+                    type="tel"
+                    placeholder="+998"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="city"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full gap-3">
+                <FormLabel className="text-base-semibold text-light-2">
+                  Город проживания
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="account-form_input no-focus"
+                    type="text"
+                    placeholder="Ташкент"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex">
+            <FormField
+              control={form.control}
+              name="passport_series"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-50 gap-3">
+                  <FormLabel className="text-base-semibold text-light-2">
+                    Серия паспорта
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="account-form_input no-focus"
+                      type="text"
+                      placeholder="AA"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="passport_number"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full gap-3">
+                  <FormLabel className="text-base-semibold text-light-2">
+                    Номер паспорта
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="account-form_input no-focus"
+                      type="text"
+                      placeholder="1234567"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormField
+            control={form.control}
+            name="cardNumber"
+            render={({ field }) => (
+              <FormItem className="flex flex-col w-full gap-3">
+                <FormLabel className="text-base-semibold text-light-2">
+                  Номер карты
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    className="account-form_input no-focus"
+                    type="text"
+                    placeholder="1111 2222 3333 4444"
                     {...field}
                   />
                 </FormControl>
@@ -197,7 +329,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             )}
           />
           <Button type="submit" className="bg-primary-500">
-              {btnTitle}
+              Продолжить
           </Button>
         </form>
       </Form>

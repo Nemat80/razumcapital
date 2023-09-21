@@ -16,6 +16,12 @@ interface Params {
   image:string;
   path:string;
   role: string;
+  mail:string;
+  tel:string;
+  city:string;
+  passport_series:string;
+  passport_number:string;
+  cardNumber:string;
 }
 
 interface Investment extends Document {
@@ -60,10 +66,16 @@ export async function updateUser({
   userId,
   lastname,
   name,
-  bio ,
+  bio,
   image ,
   path ,
   role,
+  mail,
+  tel,
+  city,
+  passport_series,
+  passport_number,
+  cardNumber,
 }: Params): Promise<void> {
   connectToDB();
 
@@ -77,6 +89,12 @@ export async function updateUser({
         image,
         onboarded: true,
         role,
+        mail,
+        tel,
+        city,
+        passport_series,
+        passport_number,
+        cardNumber,
       },
       { upsert: true }
     );
