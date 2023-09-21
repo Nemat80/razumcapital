@@ -12,7 +12,7 @@ async function Page() {
 
 
   const userData = {
-    id: user.id,
+    id: user.id, 
     objectId: userInfo?._id,
     lastname: userInfo?.lastname || user?.lastName,
     name: userInfo?.name || user?.firstName || "",
