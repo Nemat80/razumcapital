@@ -154,7 +154,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
          className="bg-green-400 mb-4"
           type="button"
           onClick={toggleShow}
-         >
+         > 
           Просмотр ежемесячного отчёта
          </Button>
 
