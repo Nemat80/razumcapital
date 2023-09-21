@@ -28,12 +28,6 @@ interface Props {
     bio: string;
     image: string;
     role: string; 
-    mail: string;
-    tel: string;
-    city: string;
-    passport_series: string;
-    passport_number: string;
-    cardNumber: string;
   };
 }
 

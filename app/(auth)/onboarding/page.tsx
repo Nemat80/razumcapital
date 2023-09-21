@@ -19,12 +19,6 @@ async function Page() {
     bio: userInfo?.bio || "",
     image: userInfo?.image || user.imageUrl,
     role: userInfo?.role,
-    mail: "",
-    tel: "",
-    city: "",
-    passport_series: "",
-    passport_number: "",
-    cardNumber: "",
   };
   
 
