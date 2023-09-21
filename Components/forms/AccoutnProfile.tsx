@@ -43,7 +43,7 @@ const AccountProfile = ({ user }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const form = useForm({
-    resolver: zodResolver(UserValidation),
+    resolver: zodResolver(UserValidation), 
     defaultValues: {
       profile_photo: user?.image || "",
       name: user?.name || "",

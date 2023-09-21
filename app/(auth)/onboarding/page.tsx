@@ -5,20 +5,19 @@ import { currentUser } from "@clerk/nextjs";
 
 async function Page() {
   const user = await currentUser();
-  if (!user) return null;
+  if (!user) return null; 
 
   const userInfo = await fetchUser(user.id);
   if (userInfo?.onboarded) redirect("/");
-  if (userInfo?.role === "ADMIN") redirect("/Admin");
+
 
   const userData = {
     id: user.id,
     objectId: userInfo?._id,
     lastname: userInfo?.lastname || user?.lastName,
-    name: userInfo?.name || user.firstName || "",
+    name: userInfo?.name || user?.firstName || "",
     bio: userInfo?.bio || "",
     image: userInfo?.image || user.imageUrl,
-    balance: userInfo?.balance,
     role: userInfo?.role,
     mail: "",
     tel: "",
@@ -27,6 +26,7 @@ async function Page() {
     passport_number: "",
     cardNumber: "",
   };
+  
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col justify-start px-10 py-20">
@@ -36,7 +36,9 @@ async function Page() {
       </p>
 
       <section className="mt-9 bg-dark-2 p-10">
-        <AccountProfile user={userData} />
+        <AccountProfile
+         user={userData} 
+        />
       </section>
     </main>
   );
