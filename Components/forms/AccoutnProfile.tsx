@@ -225,7 +225,7 @@ const AccountProfile = ({ user }: Props) => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> 
           <FormField
             control={form.control} 
             name="tel"
