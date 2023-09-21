@@ -239,7 +239,7 @@ const AccountProfile = ({ user }: Props) => {
                     className="account-form_input no-focus"
                     type="tel"
                     placeholder="+998"
-                    {...field}
+                    {...field} 
                   />
                 </FormControl>
                 <FormMessage />
