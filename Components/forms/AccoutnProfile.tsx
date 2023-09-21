@@ -227,7 +227,7 @@ const AccountProfile = ({ user }: Props) => {
             )}
           />
           <FormField
-            control={form.control}
+            control={form.control} 
             name="tel"
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-3">
