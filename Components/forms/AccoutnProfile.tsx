@@ -27,7 +27,7 @@ interface Props {
     name: string;
     bio: string;
     image: string;
-    role: string;
+    role: string; 
     mail: string;
     tel: string;
     city: string;
