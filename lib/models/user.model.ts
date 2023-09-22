@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         match: /^\d{6}$/
       },
-      cardNumber: { type: String, unique: true },
+      cardNumber: { type: String, },
       role: {
         type: String,
         enum: ["USER","ADMIN"],
