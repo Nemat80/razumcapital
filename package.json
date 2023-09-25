@@ -16,6 +16,7 @@
     "@nextui-org/table": "^2.0.13",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
     "@types/formidable": "^3.4.2",
     "@types/node": "20.4.9",
     "@types/react": "18.2.19",
