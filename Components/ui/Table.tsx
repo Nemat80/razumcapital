@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import {
@@ -13,12 +13,7 @@ import {
 } from "recharts";
 import { Button } from "./button";
 import { deleteInvestment } from "@/lib/actions/investment.actions";
-import { saveAs } from 'file-saver';
-
-interface Props {
-  user:string;
-}
-
+import { saveAs } from "file-saver";
 
 type InvestmentData = {
   id: string;
@@ -26,6 +21,7 @@ type InvestmentData = {
   date: string;
   _id: string;
   contract: string;
+  perMonth: string;
 };
 
 type TableProps = {
@@ -34,11 +30,8 @@ type TableProps = {
 
 const TableInvestments: React.FC<TableProps> = ({ investments }) => {
   const renderInvestmentRows = (investment: InvestmentData) => {
-
-
     const [show, setShow] = useState(false);
     const toggleShow = () => setShow(!show);
-
 
     const handleDownload = async () => {
       try {
@@ -46,10 +39,15 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
         const blob = await response.blob();
         saveAs(blob, `договор_от_${investment.date}_${investment.amount}$`);
       } catch (error) {
-        console.error('Ошибка при загрузке файла', error);
+        console.error("Ошибка при загрузке файла", error);
       }
     };
-  
+
+    const handelClick = async () => {
+      await deleteInvestment(investment._id);
+
+      window.location.reload();
+    };
 
     const investmentRows = [];
     const investmentInfo = [];
@@ -137,12 +135,6 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
       );
     }
 
-    const handelClick = async () => {
-      await deleteInvestment(investment._id);
-    
-      window.location.reload();
-    };
-
     investmentInfo.push(
       <>
         <tr key="total" className="flex justify-between text-start mt-4 mb-5">
@@ -152,37 +144,76 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
           <td>{(totalAmount - investment.amount).toFixed(2)}</td>
           <td>{totalAmount.toFixed(2)}</td>
         </tr>
-        <div className="w-full flex justify-center border-b-2 border-emerald-300">
-        </div>
+        <div className="w-full flex justify-center border-b-2 border-emerald-300"></div>
       </>
     );
 
     investmentRows.push(
-      <>
-       <div  className="flex justify-between p-3 items-center rounded border border-current flex">
-         <h1 className="text-body-bold"> {investment.amount }$ от {investment.date} </h1>
-         <button 
-         onClick={handleDownload}
-         >
-         Скачать договор
-         </button>
-         <Button
-         className="bg-green-400 mb-4"
-          type="button"
-          onClick={toggleShow}
-         >
-          Просмотреть 
-         </Button>
-         <Button onClick={handelClick} className="bg-red-500 mb-4">
-            Удалить 
-          </Button>
-        </div>
+      investment.perMonth === "PER_MONTH" ? (
+        <>
+          <div className="flex  p-4 items-center justify-between rounded border border-current">
+            <div className="flex-col border-r border-current pr-3">
+              <legend>Ежемесячная Ивестиция</legend>
+              <p>
+                {investment.amount} $ от {investment.date}{" "}
+              </p>
+            </div>
 
-        {show ? (<section className="flex flex-col justify gap-3 duration-200">
-          {investmentInfo}
-          </section>): null
-        }
-      </>
+            <div className="flex-col border-r border-current pr-3">
+              <legend className="text-[14px]">Процент Ежемесячно</legend>
+              <p className="text-[15px]">{investment.amount * 0.05} $</p>
+            </div>
+
+            <div className="flex-col border-r border-current pr-3">
+              <legend>Прибль за 3 года</legend>
+              <p>{investment.amount * 0.05 * 36} $</p>
+            </div>
+
+            <Button
+              onClick={handleDownload}
+              className="flex flex-col mb-2 bg-yellow-400"
+            >
+              Скачать договор
+            </Button>
+            <Button onClick={handelClick} className="bg-red-500 mb-2 ">
+              Удалить
+            </Button>
+          </div>
+
+          {show ? (
+            <section className="flex flex-col justify gap-3 duration-200">
+              {investmentInfo}
+            </section>
+          ) : null}
+        </>
+      ) : (
+        <>
+          <div className="flex justify-between p-3 items-center rounded border border-current ">
+            <h1 className="text-body-bold">
+              {investment.amount}$ от {investment.date}
+            </h1>
+            <Button
+              className="bg-green-400 mb-2"
+              type="button"
+              onClick={toggleShow}
+            >
+              Просмотреть
+            </Button>
+            <Button onClick={handleDownload} className="bg-yellow-400 mb-2">
+              Скачать договор
+            </Button>
+            <Button onClick={handelClick} className="bg-red-500 mb-2">
+              Удалить
+            </Button>
+          </div>
+
+          {show ? (
+            <section className="flex flex-col justify gap-3 duration-200">
+              {investmentInfo}
+            </section>
+          ) : null}
+        </>
+      )
     );
 
     return investmentRows;

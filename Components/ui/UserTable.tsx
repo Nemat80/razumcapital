@@ -20,6 +20,7 @@ type InvestmentData = {
   date: string;
   _id: string;
   contract:string;
+  perMonth:string;
 };
 
 type TableProps = {
@@ -139,40 +140,78 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
       </>
     );
 
-    investmentRows.push(
-      <>
-      <div  className="flex justify-between p-3 items-center ">
-      {investmentDiagram}
-      </div>
-      <Button 
-          className="bg-yellow-300"
-         onClick={handleDownload}
-         >
-         Скачать договор
-         </Button>
-      <Button 
-         className="bg-green-400 mb-4"
-          type="button"
-          onClick={toggleShow}
-         > 
-          Просмотр ежемесячного отчёта 
-         </Button>
 
-        {show ? (<section className="flex flex-col justify gap-3 duration-200">
-        <thead className="w-full">
-              <tr className="w-full flex justify-between py-1 px-2 rounded-xl bg-zinc-600">
-                <th>Дата</th>
-                <th>Инвестиция</th>
-                <th>Баланс</th>
-                <th>Прибль</th>
-                <th>Итого</th>
-              </tr>
-            </thead>
-          {investmentInfo}
-          </section>): null
-        }
-      </>
-    )
+
+    investmentRows.push(
+      investment.perMonth === "PER_MONTH" ? (
+        <>
+          <div className="flex  p-4 items-center justify-between rounded border border-current">
+            <div className="flex-col border-r border-current pr-3">
+              <legend>Ежемесячная Ивестиция</legend>
+              <p>
+                {investment.amount} $ от {investment.date}{" "}
+              </p>
+            </div>
+
+            <div className="flex-col border-r border-current pr-3">
+              <legend className="text-[14px]">Процент Ежемесячно</legend>
+              <p className="text-[15px]">{investment.amount * 0.05} $</p>
+            </div>
+
+            <div className="flex-col border-r border-current pr-3">
+              <legend>Прибль за 3 года</legend>
+              <p>{investment.amount * 0.05 * 36} $</p>
+            </div>
+
+            <Button
+              onClick={handleDownload}
+              className="flex flex-col mb-2 bg-yellow-400"
+            >
+              Скачать договор
+            </Button>
+          </div>
+
+          {show ? (
+            <section className="flex flex-col justify gap-3 duration-200">
+              {investmentInfo}
+            </section>
+          ) : null}
+        </>
+      ) : (
+        <>
+        <div  className="flex justify-between p-3 items-center border-t-2 border-stone-400">
+        {investmentDiagram}
+        </div>
+        <Button 
+            className="bg-yellow-300"
+           onClick={handleDownload}
+           >
+           Скачать договор
+           </Button>
+        <Button 
+           className="bg-green-400 mb-4"
+            type="button"
+            onClick={toggleShow}
+           > 
+            Просмотр ежемесячного отчёта 
+           </Button>
+  
+          {show ? (<section className="flex flex-col justify gap-3 duration-200">
+          <thead className="w-full">
+                <tr className="w-full flex justify-between py-1 px-2 rounded-xl bg-zinc-600">
+                  <th>Дата</th>
+                  <th>Инвестиция</th>
+                  <th>Баланс</th>
+                  <th>Прибль</th>
+                  <th>Итого</th>
+                </tr>
+              </thead>
+            {investmentInfo}
+            </section>): null
+          }
+        </>
+      )
+    );
 
     return investmentRows;
   };

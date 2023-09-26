@@ -18,7 +18,7 @@ import { usePathname } from "next/navigation";
 
 import { InvestmentValidation } from "@/lib/validations/investment";
 import { createInvestment } from "@/lib/actions/investment.actions";
-import { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { findInvestmentsByUserId } from "@/lib/actions/user.actions";
 import { Document, Types } from "mongoose";
 import TableInvestments from "@/Components/ui/Table";
@@ -33,6 +33,7 @@ interface investments extends Document {
   date: string;
   _id: string;
   contract: string;
+  perMonth: string;
 }
 
 export default function UserInfo() {
@@ -50,24 +51,23 @@ export default function UserInfo() {
       investor: objectId,
       date: "",
       contract: "",
+      perMonth: "PER_SIX_MONTH",
     },
   });
-  
-  
+
   const [file, setFile] = useState<File[]>([]);
   const { startUpload } = useUploadThing("file");
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof InvestmentValidation>) => {
     setIsSubmitting(true);
 
-
-    const fileUrl =  await startUpload(file);
+    const fileUrl = await startUpload(file);
 
     if (fileUrl && fileUrl[0].fileUrl) {
-          values.contract = fileUrl[0].fileUrl;
-        }
+      values.contract = fileUrl[0].fileUrl;
+    }
 
     await createInvestment({
       amount: values.amount,
@@ -75,6 +75,7 @@ export default function UserInfo() {
       date: values.date,
       path: pathname,
       contract: values.contract,
+      perMonth: values.perMonth,
     });
 
     form.reset({
@@ -82,6 +83,7 @@ export default function UserInfo() {
       investor: objectId,
       date: "",
       contract: "",
+      perMonth: "",
     });
 
     window.location.reload();
@@ -181,27 +183,77 @@ export default function UserInfo() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="contract"
               render={({ field }) => (
-                <FormItem className="flex flex-col w-full gap-3">
-                  <FormLabel className="text-base-semibold text-light-2">
+                <FormItem className="flex flex-col  gap-3">
+                  <FormLabel className="text-base-semibold w-full text-light-2">
                     Договор
                   </FormLabel>
                   <FormControl className="no-focus border border-dark-4">
                     <Input
                       type="file"
                       placeholder="Зашрузите договор"
-                      className="border border-dark-4 bg-dark-3 no-focus text-light-2 file:text-blue"
+                      className="w-50 border border-dark-4 bg-dark-3 no-focus text-light-2 file:text-blue"
                       required
                       onChange={(e) => handleFileChange(e, field.onChange)}
                     />
-                  </FormControl> 
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <div className="flex w-full justify-center gap-3">
+              <FormField
+                control={form.control}
+                name="perMonth"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-center text-base-semibold text-light-2">
+                      Ежемесячно
+                    </FormLabel>
+                    <FormControl className="no-focus border border-dark-4">
+                      <Input
+                        name="permonth"
+                        type="radio"
+                        value="PER_MONTH"
+                        className="w-5  self-center"
+                        onChange={(e) => {
+                          field.onChange(e);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="perMonth"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-end text-base-semibold text-light-2">
+                      3 года
+                    </FormLabel>
+                    <FormControl className="no-focus border border-dark-4">
+                      <Input
+                        name="permonth"
+                        type="radio"
+                        value="PER_SIX_MONTH"
+                        checked
+                        className="w-6 h-10 self-end"
+                        onChange={(e) => {
+                          field.onChange(e);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {isSubmitting ? (
               <Button className="bg-green-500">
@@ -226,7 +278,7 @@ export default function UserInfo() {
           <p className="no-result">Инвестиций не найдено</p>
         ) : (
           <div className="w-full">
-            <TableInvestments  investments={investments} />
+            <TableInvestments investments={investments} />
           </div>
         )}
       </div>

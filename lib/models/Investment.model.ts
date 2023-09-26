@@ -16,6 +16,11 @@ const investmentSchema = new mongoose.Schema({
       required: true,
     },
     contract: {type: String},
+    perMonth: {
+      type: String,
+      default: "PER_SIX_MONTH",
+    },
+  
   });
   
   const Investment = mongoose.models.Investment || mongoose.model('Investment', investmentSchema);

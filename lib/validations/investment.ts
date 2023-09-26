@@ -6,5 +6,5 @@ export const InvestmentValidation = z.object({
     investor: z.string(),
     date: z.string() ,
     contract: z.string().url().nonempty(),
-
+    perMonth: z.string()
 })
