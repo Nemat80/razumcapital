@@ -25,7 +25,6 @@ import TableInvestments from "@/Components/ui/Table";
 import ProfileHeader from "@/Components/shared/ProfileHeader";
 import { useRouter } from "next/navigation";
 import { useUploadThing } from "@/lib/uploadthing";
-import { isBase64Pdf } from "@/lib/utils";
 
 interface investments extends Document {
   id: string;
@@ -53,26 +52,22 @@ export default function UserInfo() {
       contract: "",
     },
   });
-
+  
+  
   const [file, setFile] = useState<File[]>([]);
   const { startUpload } = useUploadThing("file");
-
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (values: z.infer<typeof InvestmentValidation>) => {
     setIsSubmitting(true);
 
-    const blob = values.contract;
 
-    const hasPdfChanged = isBase64Pdf(blob);
+    const fileUrl =  await startUpload(file);
 
-    if (hasPdfChanged) {
-      const pdfRes = await startUpload(file);
-
-      if (pdfRes && pdfRes[0].fileUrl) {
-        values.contract = pdfRes[0].fileUrl;
-      }
-    }
+    if (fileUrl && fileUrl[0].fileUrl) {
+          values.contract = fileUrl[0].fileUrl;
+        }
 
     await createInvestment({
       amount: values.amount,
@@ -104,11 +99,9 @@ export default function UserInfo() {
       const file = e.target.files[0];
       setFile(Array.from(e.target.files));
 
-      if (!file.type.includes("pdf")) return;
-
       fileReader.onload = async (event) => {
-        const PdfDataUrl = event.target?.result?.toString() || "";
-        fieldChange(PdfDataUrl);
+        const FileDataUrl = event.target?.result?.toString() || "";
+        fieldChange(FileDataUrl);
       };
 
       fileReader.readAsDataURL(file);
@@ -233,7 +226,7 @@ export default function UserInfo() {
           <p className="no-result">Инвестиций не найдено</p>
         ) : (
           <div className="w-full">
-            <TableInvestments investments={investments} />
+            <TableInvestments  investments={investments} />
           </div>
         )}
       </div>

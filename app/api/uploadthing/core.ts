@@ -7,7 +7,14 @@ const getUser = async () => await currentUser();
 
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
-  file: f({ pdf: { maxFileSize: "8MB", maxFileCount: 1 } })
+  file: f({
+    pdf:{ maxFileSize: "4MB", maxFileCount: 1},
+    "application\/vnd.openxmlformats-officedocument.wordprocessingml.document":{ maxFileSize: "4MB", maxFileCount: 1},
+    image:{ maxFileSize: "4MB", maxFileCount: 1},
+
+  })
+
+
     // Set permissions and file types for this FileRoute
     .middleware(async (req) => {
       // This code runs on your server before upload

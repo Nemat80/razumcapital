@@ -9,6 +9,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 
+export function isBase64Image(imageData: string) {
+  const base64Regex = /^data:image\/(png|jpe?g|gif|webp);base64,/;
+  return base64Regex.test(imageData);
+}
 
 
 export function isBase64Pdf(fileData: string): boolean {
@@ -16,6 +20,10 @@ export function isBase64Pdf(fileData: string): boolean {
   return base64Regex.test(fileData);
 }
 
+export function isBase64Docx(fileData: string): boolean {
+  const base64Regex = /^data:application\/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,/;
+  return base64Regex.test(fileData);
+}
 
 
 // created by chatgpt

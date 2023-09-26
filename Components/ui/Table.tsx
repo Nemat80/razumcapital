@@ -15,8 +15,9 @@ import { Button } from "./button";
 import { deleteInvestment } from "@/lib/actions/investment.actions";
 import { saveAs } from 'file-saver';
 
-
-
+interface Props {
+  user:string;
+}
 
 
 type InvestmentData = {
@@ -43,7 +44,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
       try {
         const response = await fetch(investment.contract);
         const blob = await response.blob();
-        saveAs(blob, 'contract.pdf');
+        saveAs(blob, `договор_от_${investment.date}_${investment.amount}$`);
       } catch (error) {
         console.error('Ошибка при загрузке файла', error);
       }
