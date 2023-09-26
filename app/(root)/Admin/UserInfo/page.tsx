@@ -210,9 +210,9 @@ export default function UserInfo() {
                 control={form.control}
                 name="perMonth"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-center text-base-semibold text-light-2">
-                      Ежемесячно
+                  <FormItem className="flex flex-col border-r-2 border-stone-400 pr-4">
+                    <FormLabel className="text-start text-[14px] text-light-2">
+                      Без реинвестирования
                     </FormLabel>
                     <FormControl className="no-focus border border-dark-4">
                       <Input
@@ -233,9 +233,9 @@ export default function UserInfo() {
                 control={form.control}
                 name="perMonth"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="text-end text-base-semibold text-light-2">
-                      3 года
+                  <FormItem className="flex flex-col pl-4">
+                    <FormLabel className="text-end text-[14px] text-light-2 ">
+                      С реинвестирования
                     </FormLabel>
                     <FormControl className="no-focus border border-dark-4">
                       <Input
@@ -243,7 +243,7 @@ export default function UserInfo() {
                         type="radio"
                         value="PER_SIX_MONTH"
                         checked
-                        className="w-6 h-10 self-end"
+                        className="w-5 h-10 self-center "
                         onChange={(e) => {
                           field.onChange(e);
                         }}
