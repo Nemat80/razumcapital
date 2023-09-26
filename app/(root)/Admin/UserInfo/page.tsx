@@ -235,7 +235,7 @@ export default function UserInfo() {
                 render={({ field }) => (
                   <FormItem className="flex flex-col pl-4">
                     <FormLabel className="text-end text-[14px] text-light-2 ">
-                      С реинвестирования
+                      С реинвестированием
                     </FormLabel>
                     <FormControl className="no-focus border border-dark-4">
                       <Input
