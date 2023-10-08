@@ -35,7 +35,7 @@ const AccountProfile = ({ user }: Props) => {
   const [files, setFiles] = useState<File[]>([]);
 
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname(); 
   const form = useForm({
     resolver: zodResolver(UserValidation), 
     defaultValues: {

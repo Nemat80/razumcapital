@@ -32,6 +32,10 @@ interface Investment extends Document {
 
 
 
+
+
+
+
 export async function fetchUser(userId: string) {
   try {
     connectToDB();

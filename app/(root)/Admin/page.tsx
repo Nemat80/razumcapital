@@ -3,6 +3,8 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 import UserCard from "@/Components/cards/UserCard";
+import { Button } from "@/Components/ui/button";
+import Link from "next/link";
 
 
 export default async function Admin() {
@@ -12,6 +14,8 @@ export default async function Admin() {
 
   const userInfo = await fetchUser(user.id);
   if (!userInfo?.onboarded) redirect("/onboarding");
+  
+
 
   const result = await fetchUsers({
     userId: user.id,
@@ -20,11 +24,21 @@ export default async function Admin() {
   if (userInfo?.role === "ADMIN") {
     return (
       <>
-        <div className="flex w-full">
+        <div className="flex w-full justify-between">
           <h1 className="head-text border-b-2 border-stone-500 mb-5 pb-3 w-full">Панель Админа</h1>
+
+          <Link 
+          href={"/Admin/CreateUser"}
+          >
+          <Button
+          className="flex bg-green-400 text-[14px] text-center p-2"
+          >
+            Создать профиль
+          </Button>
+          </Link>
         </div>
 
-        <div className="">
+        <div>
 
         <div className="mt-10 flex  flex-col gap-2">
           {result.users.length === 0 ? (
