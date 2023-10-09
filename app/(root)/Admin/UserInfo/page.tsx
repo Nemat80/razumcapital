@@ -242,7 +242,6 @@ export default function UserInfo() {
                         name="permonth"
                         type="radio"
                         value="PER_SIX_MONTH"
-                        checked
                         className="w-5 h-10 self-center "
                         onChange={(e) => {
                           field.onChange(e);
