@@ -22,9 +22,8 @@ export  const sidebarLinks = [
     { value: "tagged", label: "Tagged", icon: "/assets/tag.svg" },
   ];
   
-  export const communityTabs = [
-    { value: "threads", label: "Threads", icon: "/assets/reply.svg" },
-    { value: "members", label: "Members", icon: "/assets/members.svg" },
-    { value: "requests", label: "Requests", icon: "/assets/request.svg" },
+  export const userTabs = [
+    { value: "investments", label: "Инвестиции", icon: "/assets/tag.svg" },
+    { value: "user", label: "Профиль", icon: "/assets/user.svg" },
   ];
   

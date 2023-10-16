@@ -26,7 +26,7 @@ export async function createInvestment({
   try {
     connectToDB();
 
-    const createInvestment = await Investment.create({
+    const createInvestment = await Investment.findOneAndUpdate({
       amount,
       investor,
       date,

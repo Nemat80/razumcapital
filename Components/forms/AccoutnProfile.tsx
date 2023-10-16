@@ -28,10 +28,17 @@ interface Props {
     bio: string;
     image: string;
     role: string; 
+    mail:string;
+    tel: string;
+    city: string;
+    passport_series: string;
+    passport_number:string;
+    cardNumber:string
   };
 }
 
 const AccountProfile = ({ user }: Props) => {
+
   const [files, setFiles] = useState<File[]>([]);
 
   const router = useRouter();
@@ -43,12 +50,12 @@ const AccountProfile = ({ user }: Props) => {
       name: user?.name || "",
       lastname: user?.lastname || "",
       bio: user?.bio || "",
-      mail: "",
-      tel: "",
-      city: "",
-      passport_series: "",
-      passport_number: "",
-      cardNumber: "",
+      mail: user?.mail || "",
+      tel: user?.tel || "",
+      city: user?.city || "",
+      passport_series: user?.passport_series || "",
+      passport_number: user?.passport_number || "",
+      cardNumber: user?.cardNumber || "",
     },
   });
 
@@ -70,6 +77,10 @@ const AccountProfile = ({ user }: Props) => {
       passport_number: values.passport_number,
       cardNumber: values.cardNumber,
     });
+    if (pathname === "/Admin/UserInfo") {
+      window.location.reload();    
+    }
+    
     if (pathname === "/profile/edit") {
       router.back();
     } else {
