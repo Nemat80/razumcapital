@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import Investment from "../models/Investment.model";
 import User from "../models/user.model";
 import { connectToDB } from "./mongoose";
-import { utapi } from "uploadthing/server";
+
 
 interface Params {
   amount: number;
@@ -26,7 +26,7 @@ export async function createInvestment({
   try {
     connectToDB();
 
-    const createInvestment = await Investment.findOneAndUpdate({
+    const createInvestment = await Investment.create({
       amount,
       investor,
       date,

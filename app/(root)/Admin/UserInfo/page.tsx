@@ -72,7 +72,7 @@ export default function UserInfo() {
   const [edit, setEdit] = useState(false)
 
   const handleClickEdit = () => {
-    setEdit(!edit); // Это изменит значение edit на противоположное
+    setEdit(!edit); 
   };
 
   const userDataEdit = {
@@ -98,7 +98,7 @@ export default function UserInfo() {
       investor: objectId,
       date: "",
       contract: "",
-      perMonth: "PER_SIX_MONTH",
+      perMonth: "",
     },
   });
 
@@ -368,6 +368,7 @@ export default function UserInfo() {
                   cardNumber={userInfo.cardNumber} 
                 />
                 <Button 
+                className="bg-blue"
                 onClick={handleClickEdit}
                 >
                   Изменить профиль

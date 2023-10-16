@@ -165,7 +165,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
             </div>
 
             <div className="flex-col border-r border-current pr-3">
-              <legend>Прибль за 3 года</legend>
+              <legend className="text-[14px]">Прибль за 3 года</legend>
               <p>{investment.amount * 0.05 * 36} $</p>
             </div>
 
@@ -188,23 +188,33 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
         </>
       ) : (
         <>
-          <div className="flex justify-between p-3 items-center rounded border border-current ">
-            <h1 className="text-body-bold">
-              {investment.amount}$ от {investment.date}
-            </h1>
-            <Button
-              className="bg-green-400 mb-2"
-              type="button"
-              onClick={toggleShow}
-            >
-              Просмотреть
-            </Button>
-            <Button onClick={handleDownload} className="bg-yellow-400 mb-2">
-              Скачать договор
-            </Button>
-            <Button onClick={handelClick} className="bg-red-500 mb-2">
-              Удалить
-            </Button>
+          <div className="flex gap-2 justify-between w-full  p-3 items-center rounded border border-current ">
+            <div className="border-r border-current pr-3">
+            <legend className="text-[15px]">Договор</legend>
+              <p  className="text-body-bold">{investment.amount}$ от {investment.date}</p>
+            </div>
+
+            <div className="flex-col border-r border-current pr-3">
+              <legend className="text-[14px]">Прибль за 3 года</legend>
+              <p> {totalAmount.toFixed(2)}$ </p>
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                className="bg-green-400 mb-2"
+                type="button"
+                onClick={toggleShow}
+              >
+                Просмотреть
+              </Button>
+
+              <Button onClick={handleDownload} className="bg-yellow-400 mb-2">
+                Скачать договор
+              </Button>
+              <Button onClick={handelClick} className="bg-red-500 mb-2">
+                Удалить
+              </Button>
+            </div>
           </div>
 
           {show ? (

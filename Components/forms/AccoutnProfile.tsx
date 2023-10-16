@@ -18,6 +18,8 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
+import { isBase64Image } from "@/lib/utils";
+import { useUploadThing } from "@/lib/uploadthing";
 
 interface Props {
   user: {
@@ -39,6 +41,7 @@ interface Props {
 
 const AccountProfile = ({ user }: Props) => {
 
+  const { startUpload } = useUploadThing("file");
   const [files, setFiles] = useState<File[]>([]);
 
   const router = useRouter();
@@ -61,6 +64,15 @@ const AccountProfile = ({ user }: Props) => {
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     const blob = values.profile_photo;
+
+    const hasImageChanged = isBase64Image(blob);
+    if (hasImageChanged) {
+      const imgRes = await startUpload(files);
+
+      if (imgRes && imgRes[0].fileUrl) {
+        values.profile_photo = imgRes[0].fileUrl;
+      }
+    }
 
     await updateUser({
       userId: user.id,
