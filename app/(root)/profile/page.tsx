@@ -2,11 +2,9 @@
 
 
 import ProfileHead from "@/Components/shared/ProfileHead";
-import { Button } from "@/Components/ui/button";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { useState } from "react";
 
 async function Page() {
   const user = await currentUser();

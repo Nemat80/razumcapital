@@ -24,8 +24,8 @@ export default async function Admin() {
   if (userInfo?.role === "ADMIN") {
     return (
       <>
-        <div className="flex w-full justify-between">
-          <h1 className="head-text border-b-2 border-stone-500 mb-5 pb-3 w-full">Панель Админа</h1>
+        <div className="flex w-full justify-between border-b-2 border-stone-500 mb-5 pb-3 w-full">
+          <h1 className="head-text ">Панель Админа</h1>
 
           <Link 
           href={"/Admin/CreateUser"}
