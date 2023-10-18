@@ -14,6 +14,15 @@ interface Params {
   contract: string;
   perMonth: string;
 }
+interface UpdateParams {
+  objectId:string
+  amount: number;
+  investor: string;
+  date: string;
+  path: string;
+  contract: string;
+  perMonth: string;
+}
 
 export async function createInvestment({
   amount,
@@ -23,9 +32,10 @@ export async function createInvestment({
   path,
   perMonth,
 }: Params) {
-  try {
-    connectToDB();
 
+  connectToDB();
+
+  try {
     const createInvestment = await Investment.create({
       amount,
       investor,
@@ -38,7 +48,40 @@ export async function createInvestment({
       $push: { investments: createInvestment._id },
     });
   } catch (error: any) {
-    throw new Error(`Error creatgin Investment ${error.message}`);
+    throw new Error(`Error creating Investment ${error.message}`);
+  }
+  revalidatePath(path);
+}
+
+
+
+export async function UpdateInvestment({
+  objectId,
+  amount,
+  investor,
+  date,
+  contract,
+  perMonth,
+  path,
+}: UpdateParams) {
+  connectToDB();
+
+  try {
+
+    const createInvestment = await Investment.findOneAndUpdate(
+      { _id: objectId },
+     { amount,
+      investor,
+      date,
+      contract,
+      perMonth,}
+    );
+
+    await User.findByIdAndUpdate(investor, {
+      $push: { investments: createInvestment._id },
+    });
+  } catch (error: any) {
+    throw new Error(`Error updating Investment ${error.message}`);
   }
   revalidatePath(path);
 }

@@ -14,6 +14,9 @@ import {
 import { Button } from "./button";
 import { deleteInvestment } from "@/lib/actions/investment.actions";
 import { saveAs } from "file-saver";
+import Modal from "@/Components/Modal/Modal";
+import { Types } from "mongoose";
+import UpdateInvestmentForm from "../forms/UpdateInvestmentForm";
 
 type InvestmentData = {
   id: string;
@@ -22,6 +25,7 @@ type InvestmentData = {
   _id: string;
   contract: string;
   perMonth: string;
+  investor: Types.ObjectId;
 };
 
 type TableProps = {
@@ -47,6 +51,18 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
       await deleteInvestment(investment._id);
 
       window.location.reload();
+    };
+
+    const user = String(investment.investor);
+
+    const [showModal, setShowModal] = useState(false);
+
+    const openModal = () => {
+      setShowModal(true);
+    };
+
+    const closeModal = () => {
+      setShowModal(false);
     };
 
     const investmentRows = [];
@@ -161,20 +177,62 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
 
             <div className="flex-col border-r border-current pr-3">
               <legend className="text-[14px]">Процент Ежемесячно</legend>
-              <p className="text-[15px]">{investment.amount * 0.05} $</p>
+              <p className="text-[15px]">
+                {(investment.amount * 0.05).toFixed(2)} $
+              </p>
             </div>
 
             <div className="flex-col border-r border-current pr-3">
               <legend className="text-[14px]">Прибль за 3 года</legend>
-              <p>{investment.amount * 0.05 * 36} $</p>
+              <p>{(investment.amount * 0.05 * 36).toFixed(2)} $</p>
             </div>
 
-            <Button
-              onClick={handleDownload}
-              className="flex flex-col mb-2 bg-yellow-400"
-            >
-              Скачать договор
-            </Button>
+            {investment.contract === "" ? (
+                <>
+                  <div className="flex flex-col border-1 border-stone-300 gap-2">
+                    <p className="text-center">Без договора</p>
+                    <Button onClick={openModal} className="bg-blue">
+                      Изменить
+                    </Button>
+                    {showModal && (
+                      <Modal onClose={closeModal}>
+                        <UpdateInvestmentForm
+                          objectId={investment._id}
+                          userId={user}
+                          amount={investment.amount}
+                          date={investment.date}
+                          contract={investment.contract}
+                          perMonth={investment.perMonth}
+                        />
+                      </Modal>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col">
+                  <Button
+                    onClick={handleDownload}
+                    className="bg-yellow-400 mb-2"
+                  >
+                    Скачать договор
+                  </Button>
+                  <Button onClick={openModal} className="bg-blue">
+                    Изменить
+                  </Button>
+                  {showModal && (
+                    <Modal onClose={closeModal}>
+                      <UpdateInvestmentForm
+                        objectId={investment._id}
+                        userId={user}
+                        amount={investment.amount}
+                        date={investment.date}
+                        contract={investment.contract}
+                        perMonth={investment.perMonth}
+                      />
+                    </Modal>
+                  )}
+                </div>
+              )}
             <Button onClick={handelClick} className="bg-red-500 mb-2 ">
               Удалить
             </Button>
@@ -190,8 +248,10 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
         <>
           <div className="flex gap-2 justify-between w-full  p-3 items-center rounded border border-current ">
             <div className="border-r border-current pr-3">
-            <legend className="text-[15px]">Договор</legend>
-              <p  className="text-body-bold">{investment.amount}$ от {investment.date}</p>
+              <legend className="text-[15px]">Договор</legend>
+              <p className="text-body-bold">
+                {investment.amount}$ от {investment.date}
+              </p>
             </div>
 
             <div className="flex-col border-r border-current pr-3">
@@ -199,7 +259,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
               <p> {totalAmount.toFixed(2)}$ </p>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <Button
                 className="bg-green-400 mb-2"
                 type="button"
@@ -208,9 +268,52 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
                 Просмотреть
               </Button>
 
-              <Button onClick={handleDownload} className="bg-yellow-400 mb-2">
-                Скачать договор
-              </Button>
+              {investment.contract === "" ? (
+                <>
+                  <div className="flex flex-col border-1 border-stone-300 gap-2">
+                    <p className="text-center">Без договора</p>
+                    <Button onClick={openModal} className="bg-blue">
+                      Изменить
+                    </Button>
+                    {showModal && (
+                      <Modal onClose={closeModal}>
+                        <UpdateInvestmentForm
+                          objectId={investment._id}
+                          userId={user}
+                          amount={investment.amount}
+                          date={investment.date}
+                          contract={investment.contract}
+                          perMonth={investment.perMonth}
+                        />
+                      </Modal>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col">
+                  <Button
+                    onClick={handleDownload}
+                    className="bg-yellow-400 mb-2"
+                  >
+                    Скачать договор
+                  </Button>
+                  <Button onClick={openModal} className="bg-blue">
+                    Изменить
+                  </Button>
+                  {showModal && (
+                    <Modal onClose={closeModal}>
+                      <UpdateInvestmentForm
+                        objectId={investment._id}
+                        userId={user}
+                        amount={investment.amount}
+                        date={investment.date}
+                        contract={investment.contract}
+                        perMonth={investment.perMonth}
+                      />
+                    </Modal>
+                  )}
+                </div>
+              )}
               <Button onClick={handelClick} className="bg-red-500 mb-2">
                 Удалить
               </Button>

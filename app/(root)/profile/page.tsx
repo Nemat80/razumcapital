@@ -14,21 +14,7 @@ async function Page() {
   if (!userInfo?.onboarded) redirect("/onboarding");
 
 
-  const userData = {
-    id: user.id,
-    objectId: userInfo?._id,
-    lastname: userInfo?.lastname || user?.lastName,
-    name: userInfo?.name || user?.firstName || "",
-    bio: userInfo?.bio || "" || user?.lastName,
-    image: userInfo?.image || user.imageUrl,
-    role: userInfo?.role || "USER",
-    mail: userInfo?.mail,
-    tel: userInfo?.tel,
-    city: userInfo?.city,
-    passport_series: userInfo?.passport_series,
-    passport_number: userInfo?.passport_number,
-    cardNumber: userInfo?.cardNumber,
-  };
+
 
   return (
     <div className="text-light-1">

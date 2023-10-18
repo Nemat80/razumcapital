@@ -41,7 +41,7 @@ interface Props {
 
 const AccountProfile = ({ user }: Props) => {
 
-  const { startUpload } = useUploadThing("file");
+  const { startUpload } = useUploadThing({ endpoint: "file" });
   const [files, setFiles] = useState<File[]>([]);
 
   const router = useRouter();
