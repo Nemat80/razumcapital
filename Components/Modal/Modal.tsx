@@ -10,10 +10,10 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
   return createPortal(
     <div
-    className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6/12 h-5/6 bg-dark-2 rounded-md p-1 mt-1 border-2 border-white-300 flex flex-col text-light-1 z-50"
+    className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5/12 h-5/6 bg-dark-2 rounded-md p-1 mt-1 border-2 border-white-300 flex flex-col text-light-1 z-50"
     >
-        <Button className='self-end  bg-red-500' onClick={onClose}>Закрыть</Button>
-           <div className=" w-full h-screen">
+        <Button className='self-end mt-2 mr-3 bg-red-500' onClick={onClose}>Закрыть</Button>
+           <div className=" w-full h-screen mt-4">
            {children}
            </div>
     </div>,

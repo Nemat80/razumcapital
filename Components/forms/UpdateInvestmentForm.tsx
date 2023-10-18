@@ -167,7 +167,7 @@ export default function UpdateInvestmentForm( { objectId, userId, amount, date, 
               </FormItem>
             )}
           />
-          <div className="flex w-full justify-center gap-3">
+          <div className="flex w-full justify-center gap-3 hidden">
             <FormField
               control={form.control}
               name="perMonth"

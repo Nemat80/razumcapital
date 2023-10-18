@@ -12,15 +12,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Button } from "./button";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 type InvestmentData = {
   id: string;
   amount: number;
   date: string;
   _id: string;
-  contract:string;
-  perMonth:string;
+  contract: string;
+  perMonth: string;
 };
 
 type TableProps = {
@@ -29,16 +29,13 @@ type TableProps = {
 
 const UserTable: React.FC<TableProps> = ({ investments }) => {
   const renderInvestmentRows = (investment: InvestmentData) => {
-
-
-
     const handleDownload = async () => {
       try {
         const response = await fetch(investment.contract);
         const blob = await response.blob();
         saveAs(blob, `договор_от_${investment.date}_${investment.amount}$`);
       } catch (error) {
-        console.error('Ошибка при загрузке файла', error);
+        console.error("Ошибка при загрузке файла", error);
       }
     };
 
@@ -49,7 +46,6 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
     const investmentRows = [];
     const investmentInfo = [];
     const investmentDiagram = [];
-
 
     let totalAmount = 0;
 
@@ -76,7 +72,9 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
       if (i === 0) {
         investmentDiagram.push(
           <div className="w-full flex flex-col">
-            <h1 className="head-text mb-5 ">{investmentAmount}$ от {endDate} </h1>
+            <h1 className="head-text mb-5 ">
+              {investmentAmount}$ от {endDate}{" "}
+            </h1>
             <div className="">
               <ResponsiveContainer width="100%" height={350} className="">
                 <BarChart data={data}>
@@ -140,8 +138,6 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
       </>
     );
 
-
-
     investmentRows.push(
       investment.perMonth === "PER_MONTH" ? (
         <>
@@ -163,12 +159,17 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
               <p>{investment.amount * 0.05 * 36} $</p>
             </div>
 
-            <Button
-              onClick={handleDownload}
-              className="flex flex-col mb-2 bg-yellow-400"
-            >
-              Скачать договор
-            </Button>
+            {investment.contract === "" ? (
+              <>
+              <Button className="">Без договора</Button>
+              </>
+            ) : (
+              <>
+                <Button className="bg-yellow-300" onClick={handleDownload}>
+                  Скачать договор
+                </Button>
+              </>
+            )}
           </div>
 
           {show ? (
@@ -179,25 +180,32 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
         </>
       ) : (
         <>
-        <div  className="flex justify-between p-3 items-center border-t-2 border-stone-400">
-        {investmentDiagram}
-        </div>
-        <Button 
-            className="bg-yellow-300"
-           onClick={handleDownload}
-           >
-           Скачать договор
-           </Button>
-        <Button 
-           className="bg-green-400 mb-4"
+          <div className="flex justify-between p-3 items-center border-t-2 border-stone-400">
+            {investmentDiagram}
+          </div>
+          {investment.contract === "" ? (
+            <>
+             <Button className="">Без договора</Button>
+            </>
+          ) : (
+            <>
+              <Button className="bg-yellow-300" onClick={handleDownload}>
+                Скачать договор
+              </Button>
+            </>
+          )}
+
+          <Button
+            className="bg-green-400 mb-4"
             type="button"
             onClick={toggleShow}
-           > 
-            Просмотр ежемесячного отчёта 
-           </Button>
-  
-          {show ? (<section className="flex flex-col justify gap-3 duration-200">
-          <thead className="w-full">
+          >
+            Просмотр ежемесячного отчёта
+          </Button>
+
+          {show ? (
+            <section className="flex flex-col justify gap-3 duration-200">
+              <thead className="w-full">
                 <tr className="w-full flex justify-between py-1 px-2 rounded-xl bg-zinc-600">
                   <th>Дата</th>
                   <th>Инвестиция</th>
@@ -206,9 +214,9 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
                   <th>Итого</th>
                 </tr>
               </thead>
-            {investmentInfo}
-            </section>): null
-          }
+              {investmentInfo}
+            </section>
+          ) : null}
         </>
       )
     );
