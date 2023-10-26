@@ -38,7 +38,7 @@ interface investments extends Document {
 export default function UserInfo() {
 
   const [userIsAdmin, setUserIsAdmin] = useState();
-  if(userIsAdmin != "ADMIN") redirect("/");
+  if(userIsAdmin == "USER") redirect("/");
 
   useEffect(() => {
     const fetchAdminStatus = async () => {
