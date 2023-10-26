@@ -101,7 +101,7 @@ export default function UpdateInvestmentForm( { objectId, userId, amount, date, 
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col mx-auto w-3/6 justify-start gap-10 border border-dark-4 rounded-md p-4"
+          className="flex flex-col  w-full mt-4  justify-start gap-10 border border-dark-4 rounded-md p-6"
         >
           <legend className="text-center text-light-2">
             Изменить инвестицию

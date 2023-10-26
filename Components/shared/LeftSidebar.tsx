@@ -26,6 +26,7 @@ function LeftSidebar() {
             pathname === link.route;
 
           return (
+            <>
             <Link
               href={link.route}
               key={link.label}
@@ -40,6 +41,7 @@ function LeftSidebar() {
 
               <p className='text-light-1 max-lg:hidden'>{link.label}</p>
             </Link>
+            </>
           );
         })}
 

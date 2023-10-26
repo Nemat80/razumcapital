@@ -141,7 +141,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
     investmentRows.push(
       investment.perMonth === "PER_MONTH" ? (
         <>
-          <div className="flex  p-4 items-center justify-between rounded border border-current">
+          <div className="flex p-4 items-center  gap-10 rounded border border-current">
             <div className="flex-col border-r border-current pr-3">
               <legend>Ежемесячная Ивестиция</legend>
               <p>
@@ -154,7 +154,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
               <p className="text-[15px]">{investment.amount * 0.05} $</p>
             </div>
 
-            <div className="flex-col border-r border-current pr-3">
+            <div className="flex-col border-r border-current pr-3 text-start">
               <legend>Прибль за 3 года</legend>
               <p>{investment.amount * 0.05 * 36} $</p>
             </div>

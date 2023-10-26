@@ -2,10 +2,13 @@ import '../globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ClerkProvider } from "@clerk/nextjs";
+import { ruRU } from "@clerk/localizations";
 
 import Topbar from '@/Components/shared/Topbar';
 import Bottombar from '@/Components/shared/Bottombar';
 import LeftSidebar from '@/Components/shared/LeftSidebar';
+
+
 
 
 
@@ -24,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider  localization={ruRU}>
 
     <html lang="en">
       <body className={inter.className}>

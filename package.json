@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.12.10",
+    "@clerk/localizations": "^1.26.7",
     "@clerk/nextjs": "^4.23.2",
     "@clerk/themes": "^1.7.5",
     "@codingfingers/next-dropbox": "^0.0.3",
