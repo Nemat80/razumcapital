@@ -28,12 +28,11 @@ function Topbar() {
                         </SignOutButton>
                     </SignedIn>
                 </div>
-
-            </div>
-
                 <div className="flex px-2">
                 <UserButton />
                 </div>
+
+            </div>
 
         </nav>
     )
