@@ -156,7 +156,7 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
 
             <div className="flex-col border-r border-current pr-3 text-start">
               <legend>Прибль за 3 года</legend>
-              <p>{investment.amount * 0.05 * 36} $</p>
+              <p>{investment.amount * 0.05 * 33} $</p>
             </div>
 
             {investment.contract === "" ? (

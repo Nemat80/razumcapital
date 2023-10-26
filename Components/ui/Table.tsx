@@ -184,7 +184,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
 
             <div className="flex-col border-r border-current pr-3">
               <legend className="text-[14px]">Прибль за 3 года</legend>
-              <p>{(investment.amount * 0.05 * 36).toFixed(2)} $</p>
+              <p>{(investment.amount * 0.05 * 33).toFixed(2)} $</p>
             </div>
 
             {investment.contract === "" ? (
