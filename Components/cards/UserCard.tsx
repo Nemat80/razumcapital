@@ -42,8 +42,8 @@ const  UserCard =   ({
         />
 
         <div className="flex gap-4 text-ellipsis">
+        <p className="text-base-semibold text-light-1">{lastName}</p>
           <h4 className="text-base-semibold text-light-1">{name}</h4>
-          <p className="text-base-semibold text-light-1">{lastName}</p>
         </div>
         <div className="flex gap-4 text-ellipsis">
           <h4 className="text-base-semibold text-light-1">{bio}</h4> 
