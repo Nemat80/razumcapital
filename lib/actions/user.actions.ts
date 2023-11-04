@@ -108,11 +108,12 @@ export async function updateUser({
   }
 }
 
+
 export async function fetchUsers({
   userId,
   searchString = "",
   pageNumber = 1,
-  pageSize = 1000,
+  pageSize = 20,
   sortBy = "desc",
 }: {
   userId: string;
@@ -120,7 +121,6 @@ export async function fetchUsers({
   pageNumber?: number;
   pageSize?: number;
   sortBy?: SortOrder;
-  investments?:any;
 }) {
   try {
     connectToDB();
@@ -133,14 +133,14 @@ export async function fetchUsers({
 
     // Create an initial query object to filter users.
     const query: FilterQuery<typeof User> = {
-      id: { $ne: userId },  // Exclude the current user from the results.
+      id: { $ne: userId }, // Exclude the current user from the results.
     };
 
     // If the search string is not empty, add the $or operator to match either username or name fields.
     if (searchString.trim() !== "") {
       query.$or = [
-        { username: { $regex: regex } },
         { name: { $regex: regex } },
+        { lastname: { $regex: regex } },
       ];
     }
 
