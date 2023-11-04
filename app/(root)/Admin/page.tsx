@@ -16,7 +16,7 @@ export default async function Admin({
   if (!user) return null;
 
   const userInfo = await fetchUser(user.id);
-  if (!userInfo?.onboarded) redirect("/onboarding");
+  if (userInfo.role === "USER") redirect("/");
 
   const result = await fetchUsers({
     userId: user.id,
