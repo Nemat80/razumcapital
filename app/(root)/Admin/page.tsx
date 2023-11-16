@@ -3,9 +3,11 @@ import { redirect } from "next/navigation";
 import { fetchUser, fetchUsers } from "@/lib/actions/user.actions";
 import { Button } from "@/Components/ui/button";
 import Link from "next/link";
-import Searchbar from "@/Components/shared/SearchBar";
-import UserCard from "@/Components/cards/UserCard";
 import Pagination from "@/Components/shared/Pagination";
+import SearchUsers from "@/Components/shared/SearchUsers";
+
+
+
 
 export default async function Admin({
   searchParams,
@@ -15,12 +17,13 @@ export default async function Admin({
   const user = await currentUser();
   if (!user) return null;
 
+
   const userInfo = await fetchUser(user.id);
   if (userInfo.role === "USER") redirect("/");
 
   const result = await fetchUsers({
     userId: user.id,
-    searchString: searchParams?.q || '', // Правильно передаем значение "q" из объекта searchParams или пустую строку, если ключ "q" не существует
+    searchString: searchParams?.q || '', 
     pageNumber: searchParams?.page ? +searchParams.page : 1,
     pageSize: 20,
   });
@@ -40,27 +43,10 @@ export default async function Admin({
         </div>
         <section>
 
-      <Searchbar routeType='Admin' />
-
-      <div className='mt-14 flex flex-col gap-9'>
-      {result.users.length === 0 ? (
-        <p className="no-result">Не найдено инвесторов</p>
-      ) : (
-        <>
-          {result.users.map((person) => (
-            <UserCard
-              key={person.id}
-              id={person._id}
-              name={person.name}
-              lastName={person.lastname}
-              imgUrl={person.image}
-              bio={person.bio}
-              personType={person.role}
-            />
-          ))}
-          </>
-        )}
-      </div>
+      <SearchUsers 
+      userId={user.id}
+      searchParams={searchParams}
+      />
 
       <Pagination
         path='Admin'

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -28,22 +28,22 @@ function Searchbar({ routeType }: Props) {
   }, [search, routeType]);
 
   return (
-    <div className='searchbar'>
-      <Image
-        src='/assets/search-gray.svg'
-        alt='search'
-        width={24}
-        height={24}
-        className='object-contain'
-      />
-      <Input
-        id='text'
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder={'Поиск Инвесторов'}
-        className='no-focus searchbar_input'
-      />
-    </div>
+        <div className="searchbar">
+          <Image
+            src="/assets/search-gray.svg"
+            alt="search"
+            width={24}
+            height={24}
+            className="object-contain"
+          />
+          <Input
+            id="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={"Поиск Инвесторов"}
+            className="no-focus searchbar_input"
+          />
+        </div>
   );
 }
 

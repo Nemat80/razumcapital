@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect, useSearchParams } from "next/navigation";
+import {  redirect, useSearchParams } from "next/navigation";
 import { Button } from "@/Components/ui/button";
 
 import { usePathname } from "next/navigation";
@@ -25,6 +25,7 @@ import { currentUser } from "@clerk/nextjs";
 
 
 
+
 interface investments extends Document {
   id: string;
   amount: number;
@@ -35,28 +36,10 @@ interface investments extends Document {
   perMonth: string;
 }
 
+
+
+
 export default function UserInfo() {
-
-  const [userIsAdmin, setUserIsAdmin] = useState();
-  if(userIsAdmin == "USER") redirect("/");
-
-  useEffect(() => {
-    const fetchAdminStatus = async () => {
-      try {
-        const user = await currentUser();
-        if(!user) return null
-        const userInfo = await fetchUser(user.id); 
-
-
-        setUserIsAdmin(userInfo.role);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchAdminStatus();
-  }, []);
-
 
 
   const router = useRouter();
@@ -122,8 +105,6 @@ export default function UserInfo() {
 
   return (
     <>
-
-
       <div className="flex flex-col  justify-center items-center">
         <div className="flex items-center gap-4 border-b-2 border-stone-500  mb-5 pb-3 w-full">
           <Button className="bg-primary-500" onClick={router.back}>

@@ -115,12 +115,14 @@ export async function fetchUsers({
   pageNumber = 1,
   pageSize = 20,
   sortBy = "desc",
+  city = "",
 }: {
   userId: string;
   searchString?: string;
   pageNumber?: number;
   pageSize?: number;
   sortBy?: SortOrder;
+  city?:string;
 }) {
   try {
     connectToDB();
@@ -133,7 +135,7 @@ export async function fetchUsers({
 
     // Create an initial query object to filter users.
     const query: FilterQuery<typeof User> = {
-      id: { $ne: userId }, // Exclude the current user from the results.
+      id: { $ne: userId }, 
     };
 
     // If the search string is not empty, add the $or operator to match either username or name fields.
@@ -141,8 +143,14 @@ export async function fetchUsers({
       query.$or = [
         { name: { $regex: regex } },
         { lastname: { $regex: regex } },
+        { bio: { $regex: regex } },
       ];
     }
+
+    if (city.trim() !== "") {
+      query.city = city;
+    }
+
 
     // Define the sort options for the fetched users based on createdAt field and provided sort order.
     const sortOptions = { createdAt: sortBy };
