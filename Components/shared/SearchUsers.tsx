@@ -44,7 +44,7 @@ export default function SearchUsers({ userId, searchParams }: Props) {
         <Button className="bg-black" onClick={() => setCity("Toshkent")}>
           Ташкент
         </Button>
-        <Button className="bg-black" onClick={() => setCity("Buhoro")}>
+        <Button className="bg-black" onClick={() => setCity("Buxoro")}>
           Бухара
         </Button>
       </div>
