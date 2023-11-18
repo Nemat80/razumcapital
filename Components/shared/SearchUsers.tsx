@@ -1,10 +1,11 @@
 "use client";
 
 import { fetchUsers } from "@/lib/actions/user.actions";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import UserCard from "../cards/UserCard";
 import Searchbar from "./SearchBar";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 interface Props {
   userId: string;
@@ -14,6 +15,12 @@ interface Props {
 export default function SearchUsers({ userId, searchParams }: Props) {
   const [result, setResult] = useState<{ users: any[]; isNext: boolean }>();
   const [city, setCity] = useState("");
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTimeout(() => {
+      setCity(e.target.value);
+    }, 1000);
+  };
 
   useEffect(() => {
     async function getUsers() {
@@ -47,7 +54,11 @@ export default function SearchUsers({ userId, searchParams }: Props) {
         <Button className="bg-black" onClick={() => setCity("Buxoro")}>
           Бухара
         </Button>
+        <div className="">
+          <Input type="text" className="text-light-1 bg-black" placeholder="Другие города..." onChange={handleInputChange} />
+        </div>
       </div>
+
       <div className="mt-14 flex flex-col gap-9">
         {result === undefined ? (
           <div>Loading...</div>
