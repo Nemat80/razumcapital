@@ -141,31 +141,37 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
     investmentRows.push(
       investment.perMonth === "PER_MONTH" ? (
         <>
-          <div className="flex p-4 items-center  gap-10 rounded border border-current">
-            <div className="flex-col border-r border-current pr-3">
-              <legend>Ежемесячная Ивестиция</legend>
-              <p>
-                {investment.amount} $ от {investment.date}{" "}
+          <div className="flex py-3 px-2 items-center  justify-around gap-3  rounded border border-current responsive_text max-sm:flex-col max-sm:items-start max-sm:text-[18px]">
+            <div className="flex flex-col  border-r border-current pr-3 gap-2 max-sm:flex-row max-sm:border-hidden max-sm:flex-wrap">
+              <legend className="flex gap-2 items-center  max-sm:text-[14px]">
+                <p>Ежемесячная Ивестиция</p>
+                <p className="text-body-bold">от {investment.date}</p>
+              </legend>
+              <p className="text-body-bold">{investment.amount}$</p>
+            </div>
+
+            <div className="flex flex-col border-r border-current gap-4 pr-3 max-sm:border-hidden max-sm:flex-row">
+              <legend className="">Процент ежемесячно</legend>
+              <p className="text-body-bold">{investment.amount * 0.05}$</p>
+            </div>
+
+            <div className="flex flex-col border-r border-current text-start gap-4 pr-3 max-sm:border-hidden max-sm:flex-row">
+              <legend className="">Прибль за 3 года</legend>
+              <p className="text-body-bold">
+                {investment.amount * 0.05 * 33}$
               </p>
-            </div>
-
-            <div className="flex-col border-r border-current pr-3">
-              <legend className="text-[14px]">Процент Ежемесячно</legend>
-              <p className="text-[15px]">{investment.amount * 0.05} $</p>
-            </div>
-
-            <div className="flex-col border-r border-current pr-3 text-start">
-              <legend>Прибль за 3 года</legend>
-              <p>{investment.amount * 0.05 * 33} $</p>
             </div>
 
             {investment.contract === "" ? (
               <>
-              <Button className="">Без договора</Button>
+                <Button className="max-sm:w-full">Без договора</Button>
               </>
             ) : (
               <>
-                <Button className="bg-yellow-300" onClick={handleDownload}>
+                <Button
+                  className="bg-yellow-300 max-sm:w-full"
+                  onClick={handleDownload}
+                >
                   Скачать договор
                 </Button>
               </>
@@ -185,18 +191,18 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
           </div>
           {investment.contract === "" ? (
             <>
-             <Button className="">Без договора</Button>
+              <Button className="">Без договора</Button>
             </>
           ) : (
             <>
-              <Button className="bg-yellow-300" onClick={handleDownload}>
+              <Button className="bg-yellow-300 " onClick={handleDownload}>
                 Скачать договор
               </Button>
             </>
           )}
 
           <Button
-            className="bg-green-400 mb-4"
+            className="bg-green-400 mb-4 "
             type="button"
             onClick={toggleShow}
           >

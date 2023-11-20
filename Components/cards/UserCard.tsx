@@ -31,7 +31,7 @@ const  UserCard =   ({
 
 
   return (
-    <article className="user-card border-2 rounded-xl border-stone-300  p-4" key={stringId}>
+    <article className="user-card border-2 rounded-xl border-stone-300 p-4 responsive_text text-light-1 font-bold" key={stringId}>
       <div className="user-card_avatar">
         <Image
           src={imgUrl}
@@ -42,12 +42,12 @@ const  UserCard =   ({
         />
 
         <div className="flex gap-4 text-ellipsis">
-        <p className="text-base-semibold text-light-1">{lastName}</p>
-          <h4 className="text-base-semibold text-light-1">{name}</h4>
+        <p className="">{lastName}</p>
+          <h4 className="">{name}</h4>
         </div>
         <div className="flex gap-4 text-ellipsis">
-          <h4 className="text-base-semibold text-light-1">{bio}</h4> 
-          <h4 className="text-base-semibold text-light-1">{personType}</h4> 
+          <h4 className="">{bio}</h4> 
+          <h4 className="">{personType}</h4> 
         </div>
       </div> 
       <Link href={{ pathname: '/Admin/UserInfo', query: { id } }}>

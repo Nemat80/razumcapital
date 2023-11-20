@@ -100,7 +100,7 @@ export default function CreateInvestmentForm( {objectId, user, pathname}:Props) 
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col mx-auto w-3/6 justify-start gap-10 border border-dark-4 p-4"
+          className="flex flex-col mx-auto w-3/6 justify-start gap-10 border border-dark-4 p-4 responsive_text"
         >
           <legend className="text-center text-light-2">
             Добавить инвестицию
@@ -173,7 +173,7 @@ export default function CreateInvestmentForm( {objectId, user, pathname}:Props) 
               render={({ field }) => (
                 <FormItem className="flex flex-col border-r-2 border-stone-400 pr-4">
                   <FormLabel className="text-start  text-subtle-semibold">
-                    Без реинвестирования
+                    Без реинвеста
                   </FormLabel>
                   <FormControl className="no-focus border border-dark-4">
                     <Input
@@ -195,8 +195,8 @@ export default function CreateInvestmentForm( {objectId, user, pathname}:Props) 
               name="perMonth"
               render={({ field }) => (
                 <FormItem className="flex flex-col pl-4">
-                  <FormLabel className="text-end text-subtle-semibold">
-                    С реинвестированием
+                  <FormLabel className="text-end text-subtle-semibold max-sm:text-start">
+                    С реинвестом
                   </FormLabel>
                   <FormControl className="no-focus border border-dark-4">
                     <Input
