@@ -34,7 +34,7 @@ export default function CreateInvestmentForm( {objectId, user, pathname}:Props) 
       investor: objectId,
       date: "",
       contract: "",
-      perMonth: "",
+      perMonth: "PER_SIX_MONTH",
     },
   });
 

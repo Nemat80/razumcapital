@@ -6,9 +6,6 @@ import Link from "next/link";
 import Pagination from "@/Components/shared/Pagination";
 import SearchUsers from "@/Components/shared/SearchUsers";
 
-
-
-
 export default async function Admin({
   searchParams,
 }: {
@@ -17,17 +14,15 @@ export default async function Admin({
   const user = await currentUser();
   if (!user) return null;
 
-
   const userInfo = await fetchUser(user.id);
   if (userInfo.role === "USER") redirect("/");
 
   const result = await fetchUsers({
     userId: user.id,
-    searchString: searchParams?.q || '', 
+    searchString: searchParams?.q || "",
     pageNumber: searchParams?.page ? +searchParams.page : 1,
     pageSize: 20,
   });
-
 
   if (userInfo?.role === "ADMIN") {
     return (
@@ -35,27 +30,29 @@ export default async function Admin({
         <div className="flex w-full justify-between border-b-2 border-stone-500 mb-5 pb-3 w-full">
           <h1 className="head-text ">Панель Админа</h1>
 
-          <Link href={"/Admin/CreateUser"}>
-            <Button className="flex bg-green-400 text-[14px] text-center p-2">
-              Создать профиль
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+          <Link href={"/Admin/AdminCharts"}>
+              <Button className="flex bg-blue text-[14px] text-center p-2">
+                Статистика
+              </Button>
+            </Link>
+            <Link href={"/Admin/CreateUser"}>
+              <Button className="flex bg-green-400 text-[14px] text-center p-2">
+                Создать профиль
+              </Button>
+            </Link>
+          </div>
         </div>
         <section>
+          <SearchUsers userId={user.id} searchParams={searchParams} />
 
-      <SearchUsers 
-      userId={user.id}
-      searchParams={searchParams}
-      />
-
-      <Pagination
-        path='Admin'
-        pageNumber={searchParams?.page ? +searchParams.page : 1}
-        isNext={result.isNext}
-      />
-    </section>
-        <div>
-        </div>
+          <Pagination
+            path="Admin"
+            pageNumber={searchParams?.page ? +searchParams.page : 1}
+            isNext={result.isNext}
+          />
+        </section>
+        <div></div>
       </>
     );
   } else {

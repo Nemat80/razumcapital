@@ -1,27 +1,26 @@
 "use server";
 
-
 import { FilterQuery, SortOrder, Document, Types } from "mongoose";
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
 import { connectToDB } from "./mongoose";
-import {UserValidation } from "../validations/user"
+import { UserValidation } from "../validations/user";
 import Investment from "../models/Investment.model";
 
 interface Params {
   userId: string;
   lastname: string;
   name: string;
-  bio:string;
-  image:string;
-  path:string;
+  bio: string;
+  image: string;
+  path: string;
   role: string;
-  mail:string;
-  tel:string;
-  city:string;
-  passport_series:string;
-  passport_number:string;
-  cardNumber:string;
+  mail: string;
+  tel: string;
+  city: string;
+  passport_series: string;
+  passport_number: string;
+  cardNumber: string;
 }
 
 interface Investment extends Document {
@@ -30,47 +29,33 @@ interface Investment extends Document {
   date: string;
 }
 
-
-
-
-
-
-
 export async function fetchUser(userId: string) {
   try {
     connectToDB();
 
-    return await User.findOne({ id: userId })
-    
+    return await User.findOne({ id: userId });
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
 }
 
-
 export async function fetchUserInfo(userId: string) {
-
   try {
     connectToDB();
 
-
-    return await User.findOne( { _id: userId, } )
-
+    return await User.findOne({ _id: userId });
   } catch (error: any) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
 }
-
-
-
 
 export async function updateUser({
   userId,
   lastname,
   name,
   bio,
-  image ,
-  path ,
+  image,
+  path,
   role,
   mail,
   tel,
@@ -83,7 +68,7 @@ export async function updateUser({
 
   try {
     await User.findOneAndUpdate(
-      { id: userId, },
+      { id: userId },
       {
         lastname,
         name,
@@ -104,10 +89,9 @@ export async function updateUser({
       revalidatePath(path);
     }
   } catch (error: any) {
-    throw new Error(`Failed to create/update user: ${error.message}`)
+    throw new Error(`Failed to create/update user: ${error.message}`);
   }
 }
-
 
 export async function fetchUsers({
   userId,
@@ -122,7 +106,7 @@ export async function fetchUsers({
   pageNumber?: number;
   pageSize?: number;
   sortBy?: SortOrder;
-  city?:string;
+  city?: string;
 }) {
   try {
     connectToDB();
@@ -135,7 +119,7 @@ export async function fetchUsers({
 
     // Create an initial query object to filter users.
     const query: FilterQuery<typeof User> = {
-      id: { $ne: userId }, 
+      id: { $ne: userId },
     };
 
     // If the search string is not empty, add the $or operator to match either username or name fields.
@@ -150,7 +134,6 @@ export async function fetchUsers({
     if (city.trim() !== "") {
       query.city = city;
     }
-
 
     // Define the sort options for the fetched users based on createdAt field and provided sort order.
     const sortOptions = { createdAt: sortBy };
@@ -175,16 +158,24 @@ export async function fetchUsers({
   }
 }
 
-
-
 export const getAllUsers = async () => {
   const users = await User.find();
   return users.map((user) => UserValidation.parse(user.toJSON()));
 };
 
+export const getAllUsersInfo = async () => {
+  try {
+    connectToDB();
+    const users = await User.find();
 
+    const usersCount = users.length;
 
-
+    return { usersCount };
+    
+  } catch (error: any) {
+    throw new Error(`Failed to find all user info: ${error.message}`);
+  }
+}
 
 export async function findInvestmentsByUserId(userId: string) {
   try {
@@ -198,6 +189,6 @@ export async function findInvestmentsByUserId(userId: string) {
 
     return investments;
   } catch (error: any) {
-    throw new Error(`Failed to find investments: ${error.message}`);
+    throw new Error(`Failed to find investments by user id: ${error.message}`);
   }
 }

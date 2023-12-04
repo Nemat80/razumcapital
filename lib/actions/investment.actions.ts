@@ -6,6 +6,7 @@ import User from "../models/user.model";
 import { connectToDB } from "./mongoose";
 
 
+
 interface Params {
   amount: number;
   investor: string;
@@ -86,7 +87,7 @@ export async function UpdateInvestment({
   revalidatePath(path);
 }
 
-export async function fetchInvestments(pageNumber = 1, pageSize = 20) {
+export async function fetchInvestments(pageNumber = 1, pageSize = 100) {
   connectToDB();
 
   const skipAmount = (pageNumber - 1) * pageSize;
@@ -121,4 +122,126 @@ export async function deleteInvestment(id: string): Promise<void> {
   } catch (error: any) {
     throw new Error(`Failed to delete investment: ${error.message}`);
   }
+}
+
+
+
+// export async function getInvestmentsInfo() {
+
+//   try {
+
+//     await connectToDB();
+//     const investmentsQuery = Investment.find({
+//       parentId: { $in: [null, undefined] },
+//     });
+   
+//     const investments = await investmentsQuery.exec();
+    
+//     let totalSum = 0;
+
+//     let perMonthCount = 0;
+//     let perMonthAmount= 0
+
+//     let perSixMonthCount = 0;
+//     let perSixMonthAmount = 0;
+
+//     for (const investment of investments) {
+//       if (investment.perMonth === "PER_MONTH") {
+//         perMonthCount++;
+//         perMonthAmount += investment.amount
+//       } else if (investment.perMonth === "PER_SIX_MONTH") {
+//         perSixMonthCount++;
+//         perSixMonthAmount += investment.amount
+//       }
+//       totalSum += investment.amount;
+//     }
+//     const totalLength = investments.length;
+
+    
+    
+    
+//     return { 
+//       investments, 
+//       totalSum, 
+//       totalLength, 
+//       perMonthCount, 
+//       perMonthAmount,  
+//       perSixMonthCount, 
+//       perSixMonthAmount 
+//     };
+    
+//   } catch (error:any) {
+//     throw new Error(`Failed to get all investments info: ${error.message}`);
+//   }
+
+// }
+
+
+
+
+
+export async function getInvestmentsInfo() {
+
+  try {
+
+    await connectToDB();
+    const investmentsQuery = Investment.find({
+      parentId: { $in: [null, undefined] },
+    });
+   
+    const investments = await investmentsQuery.exec();
+    
+    let totalSum = 0;
+
+    let perMonthCount = 0;
+    let perMonthAmount= 0
+
+    let perSixMonthCount = 0;
+    let perSixMonthAmount = 0;
+
+    const yearlyAmounts = investments.reduce((acc, investment) => {
+      const year = new Date(investment.date).getFullYear();
+      if (!acc[year]) {
+        acc[year] = investment.amount;
+      } else {
+        acc[year] += investment.amount;
+      }
+      return acc;
+    }, {});
+
+    const yearlyData = Object.entries(yearlyAmounts).map(([year, amount]) => ({
+      date: year,
+      amountFullYear: amount,
+    }));
+
+    for (const investment of investments) {
+      if (investment.perMonth === "PER_MONTH") {
+        perMonthCount++;
+        perMonthAmount += investment.amount
+      } else if (investment.perMonth === "PER_SIX_MONTH") {
+        perSixMonthCount++;
+        perSixMonthAmount += investment.amount
+      }
+      totalSum += investment.amount;
+    }
+    const totalLength = investments.length;
+
+    
+    
+    
+    return { 
+      investments, 
+      totalSum, 
+      totalLength, 
+      perMonthCount, 
+      perMonthAmount,  
+      perSixMonthCount, 
+      perSixMonthAmount,
+      yearlyData,
+    };
+    
+  } catch (error:any) {
+    throw new Error(`Failed to get all investments info: ${error.message}`);
+  }
+
 }
