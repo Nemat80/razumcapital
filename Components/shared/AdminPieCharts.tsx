@@ -148,7 +148,7 @@ export default function AdminPieCharts() {
       </div>
       <div className="p-2 flex-1 flex-col gap-2 rounded-md text-light-1 bg-dark-2">
       <div className="flex h-full w-full flex-col gap-5 px-5 justify-center items-center border rounded-md p-1 border-green-500">
-            <p className="font-bold text-[18px] " >Кол-во ивесторов</p>
+            <p className="font-bold text-[18px] " >Кол-во инвесторов</p>
             <p className="font-bold text-[30px]">{users?.usersCount}</p>
           </div>
       </div>
