@@ -40,7 +40,7 @@ export default function TotalAmountCard() {
           <p className="text-[28px] mb-4 font-bold">${result?.totalSum}</p>
         </div>
         <div className="flex flex-1 w-full">
-        <ResponsiveContainer width="100%" height={350} className="">
+        <ResponsiveContainer width="100%" height={350}>
                 <BarChart data={result?.yearlyData}>
                   <XAxis
                     dataKey="date"

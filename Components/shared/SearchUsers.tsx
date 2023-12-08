@@ -19,7 +19,7 @@ export default function SearchUsers({ userId, searchParams }: Props) {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
       setCity(e.target.value);
-    }, 1000);
+    }, 1500);
   };
 
   useEffect(() => {
