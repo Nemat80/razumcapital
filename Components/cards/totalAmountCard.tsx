@@ -2,7 +2,7 @@
 
 import { getInvestmentsInfo } from "@/lib/actions/investment.actions";
 import React, { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export default function TotalAmountCard() {
   const [result, setResult] = useState<

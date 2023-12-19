@@ -25,5 +25,5 @@ export default async function AdminCharts() {
       <AdminPieCharts />
       <TotalAmountCard />
     </div>
-  );
+  ); 
 }

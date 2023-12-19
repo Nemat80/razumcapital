@@ -126,58 +126,6 @@ export async function deleteInvestment(id: string): Promise<void> {
 
 
 
-// export async function getInvestmentsInfo() {
-
-//   try {
-
-//     await connectToDB();
-//     const investmentsQuery = Investment.find({
-//       parentId: { $in: [null, undefined] },
-//     });
-   
-//     const investments = await investmentsQuery.exec();
-    
-//     let totalSum = 0;
-
-//     let perMonthCount = 0;
-//     let perMonthAmount= 0
-
-//     let perSixMonthCount = 0;
-//     let perSixMonthAmount = 0;
-
-//     for (const investment of investments) {
-//       if (investment.perMonth === "PER_MONTH") {
-//         perMonthCount++;
-//         perMonthAmount += investment.amount
-//       } else if (investment.perMonth === "PER_SIX_MONTH") {
-//         perSixMonthCount++;
-//         perSixMonthAmount += investment.amount
-//       }
-//       totalSum += investment.amount;
-//     }
-//     const totalLength = investments.length;
-
-    
-    
-    
-//     return { 
-//       investments, 
-//       totalSum, 
-//       totalLength, 
-//       perMonthCount, 
-//       perMonthAmount,  
-//       perSixMonthCount, 
-//       perSixMonthAmount 
-//     };
-    
-//   } catch (error:any) {
-//     throw new Error(`Failed to get all investments info: ${error.message}`);
-//   }
-
-// }
-
-
-
 
 
 export async function getInvestmentsInfo() {
@@ -227,8 +175,6 @@ export async function getInvestmentsInfo() {
     const totalLength = investments.length;
 
     
-    
-    
     return { 
       investments, 
       totalSum, 
@@ -244,4 +190,67 @@ export async function getInvestmentsInfo() {
     throw new Error(`Failed to get all investments info: ${error.message}`);
   }
 
+}
+
+export async function getInvestmentsByUserId(userId: string) {
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const investments = await Investment.find({ investor: userId });
+
+    let totalSum = 0;
+
+    let perMonthCount = 0;
+    let perMonthAmount= 0
+
+    let perSixMonthCount = 0;
+    let perSixMonthAmount = 0;
+
+    const yearlyAmounts = investments.reduce((acc, investment) => {
+      const year = new Date(investment.date).getFullYear();
+      if (!acc[year]) {
+        acc[year] = investment.amount;
+      } else {
+        acc[year] += investment.amount;
+      }
+      return acc;
+    }, {});
+
+    const yearlyData = Object.entries(yearlyAmounts).map(([year, amount]) => ({
+      date: year,
+      amountFullYear: amount,
+    }));
+
+    for (const investment of investments) {
+      if (investment.perMonth === "PER_MONTH") {
+        perMonthCount++;
+        perMonthAmount += investment.amount
+      } else if (investment.perMonth === "PER_SIX_MONTH") { 
+        perSixMonthCount++;
+        perSixMonthAmount += investment.amount
+      }
+      totalSum += investment.amount;
+    }
+    const totalLength = investments.length;
+
+
+    
+    return { 
+      investments, 
+      totalSum, 
+      totalLength, 
+      perMonthCount, 
+      perMonthAmount,  
+      perSixMonthCount, 
+      perSixMonthAmount,
+      yearlyData,
+    };    
+
+  } catch (error: any) {
+    throw new Error(`Failed to find investments by user id: ${error.message}`);
+  }
 }

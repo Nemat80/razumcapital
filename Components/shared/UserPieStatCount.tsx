@@ -1,17 +1,14 @@
 "use client";
 
-import { getInvestmentsInfo } from "@/lib/actions/investment.actions";
-import { getAllUsersInfo } from "@/lib/actions/user.actions";
 import { useEffect, useState } from "react";
+import { Cell, Pie, PieChart } from "recharts";
+import { getInvestmentsByUserId } from "@/lib/actions/investment.actions";
 
-import { PieChart, Pie, Cell } from "recharts";
+interface Props {
+  objectId: string;
+}
 
-export default function AdminPieCharts() {
-  const [users, setUsers] = useState<{ usersCount: number } | undefined>();
-
-
-
-
+export default function UserPieStatCount({ objectId }: Props) {
   const [investments, setInvestments] = useState<
     | {
         investments: Omit<any, never>[];
@@ -28,8 +25,8 @@ export default function AdminPieCharts() {
   useEffect(() => {
     async function usersCount() {
       try {
-        const users = await getAllUsersInfo();
-        setUsers(users);
+        const investments = await getInvestmentsByUserId(objectId);
+        setInvestments(investments);
       } catch (error) {
         console.error(error);
       }
@@ -37,19 +34,18 @@ export default function AdminPieCharts() {
     usersCount();
   }, []);
 
-  useEffect(() => {
-    async function TotalAmount() {
-      try {
-        const investments = await getInvestmentsInfo();
-        setInvestments(investments);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    TotalAmount();
-  }, []);
-
   const data = [
+    {
+      name: "С реинвестом",
+      value: investments?.perSixMonthAmount,
+    },
+    {
+      name: "Без реинвеста",
+      value: investments?.perMonthAmount,
+    },
+  ];
+  
+  const data2 = [
     {
       name: "С реинвестом",
       value: investments?.perSixMonthCount,
@@ -95,22 +91,22 @@ export default function AdminPieCharts() {
           {`${(percent * 100).toFixed(0)}%`}
         </text>
       </>
-    )
-  }
+    );
+  };
 
   return (
-    <div className="flex flex-wrap flex-row gap-4 w-full mt-4">
-      <div className="flex  items-center p-4 rounded-md text-light-1 bg-dark-2">
-        <div className="flex flex-1 gap-4 flex-col">
-          <div className="border rounded-md p-1 adaptive">
-            <p>С реинвестом </p>
-            <p className="font-bold">${investments?.perSixMonthAmount}</p>
-          </div>
-          <div className="border rounded-md p-1 border-green-500">
-            <p>Без реинвеста</p>
-            <p className="font-bold">${investments?.perMonthAmount}</p>
-          </div>
+    <div className="flex gap-2 flex-wrap  bg-dark-2 rounded-md p-4 items-center justify-center">
+      <div className="flex gap-4 flex-col">
+        <div className="border rounded-md  adaptive py-2 px-4">
+          <p>С реинвестицией </p>
+          <p className="font-bold">${investments?.perSixMonthAmount}</p>
         </div>
+        <div className="border rounded-md py-2 px-4 border-green-500">
+          <p>Без реинвестиции</p>
+          <p className="font-bold">${investments?.perMonthAmount}</p>
+        </div>
+      </div>
+      <div className="flex-1">
         <PieChart width={220} height={160}>
           <Pie
             data={data}
@@ -122,7 +118,6 @@ export default function AdminPieCharts() {
             outerRadius={70}
             fill="#8884d8"
             dataKey="value"
-
           >
             {data.map((entry, index) => (
               <Cell
@@ -133,25 +128,38 @@ export default function AdminPieCharts() {
           </Pie>
         </PieChart>
       </div>
-
-      <div className="p-4  flex-1 flex-col gap-2 rounded-md text-light-1 bg-dark-2">
-        <div className="p-3 flex gap-4 flex-col w-full">
-          <div className="flex flex-col justify-center px-4 py-2 items-center border rounded-md p-1 adaptive">
-            <p>Кол-во с реинвестом </p>
+      <div className="p-3 flex gap-4 flex-col flex-1 w-full items-center">
+          <div className="flex flex-col justify-center px-4 py-2 items-center border rounded-md  adaptive">
+            <p>Кол-во с реинвестицией </p>
             <p className="font-bold text-[28px]">{investments?.perSixMonthCount}</p>
           </div>
-          <div className="flex flex-col  items-center border rounded-md p-1 border-green-500">
-            <p>Кол-во без реинвеста</p>
+          <div className="flex flex-col  items-center border rounded-md py-2 px-4 border-green-500">
+            <p>Кол-во без реинвестиции</p>
             <p className="font-bold text-[28px]">{investments?.perMonthCount}</p>
           </div>
         </div>
-      </div>
-      <div className="p-2 flex-1 flex-col gap-2 rounded-md text-light-1 bg-dark-2">
-      <div className="flex h-full w-full flex-col gap-5 px-5 justify-center items-center border rounded-md p-1 border-green-500">
-            <p className="font-bold text-[18px] " >Кол-во инвесторов</p>
-            <p className="font-bold text-[30px]">{users?.usersCount}</p>
-          </div>
-      </div>
+        <div className="flex-1">
+        <PieChart width={220} height={160}>
+          <Pie
+            data={data2}
+            cx="65%"
+            cy="50%"
+            labelLine={false}
+            label={renderCustomizedLabel}
+            innerRadius={30}
+            outerRadius={70}
+            fill="#8884d8"
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+        </PieChart>
+        </div>
     </div>
   );
 }

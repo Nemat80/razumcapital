@@ -9,7 +9,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { fetchUser, updateUser } from "@/lib/actions/user.actions";
 import Link from "next/link";
 
+
 export default  function SignUpForm() {
+
 
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +29,7 @@ export default  function SignUpForm() {
     const fetchUserInfo = async () => {
       try {
         const userInfo = await fetchUser(createdUserId);
-        setId(userInfo._id); // Устанавливаем результат в setId
+        setId(userInfo._id); 
       } catch (error) {
         console.error('Ошибка при получении информации о пользователе', error);
       }
@@ -35,6 +37,7 @@ export default  function SignUpForm() {
 
     fetchUserInfo();  
   }, [createdUserId]);
+
 
 
 
@@ -66,7 +69,7 @@ export default  function SignUpForm() {
       return;
     }
 
-    try {
+    try { 
       const signUpResponse = await signUp.create({
         phoneNumber,
         password,
@@ -123,7 +126,7 @@ export default  function SignUpForm() {
     <>
     <div>
       {!pendingVerification && (
-        <form className="flex flex-col  gap-5">
+        <form className="flex flex-col gap-5">
           <div className="flex  gap-2 w-full">
             <div className="w-1/2 flex flex-col gap-3">
               <Label

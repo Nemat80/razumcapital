@@ -19,7 +19,7 @@ const Card = ({mail, tel, city, series, number, cardNumber} : Props) => {
 
   return (
     <>
-      <div className="flex gap-5 text-small-regular border border-stone-400 p-4 rounded-xl relative text-white fontbold shadow-2xl transition-transform transform hover:scale-105">
+      <div className="flex flex-wrap gap-5 justify-start text-small-regular border border-stone-400 p-4 rounded-xl relative text-white fontbold shadow-2xl transition-transform transform hover:scale-105 ">
         <div className="flex-col ">
           <div className="border-b border-stone-600 pb-1">
             <p className="font-medium ">Номер карты</p>

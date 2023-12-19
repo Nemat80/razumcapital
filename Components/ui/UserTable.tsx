@@ -65,8 +65,6 @@ const UserTable: React.FC<TableProps> = ({ investments }) => {
           Profit: profit.toFixed(2),
           Total: total.toFixed(2),
         });
-
-        console.log(data);
       }
 
       if (i === 0) {
