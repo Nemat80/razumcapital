@@ -57,7 +57,7 @@ export default function UserBalanceStat({ objectId }: Props) {
         <p className="font-bold text-[28px]">${totalProfit}</p>
       </div>
       <div className="flex flex-col justify-between gap-2 items-start flex-1">
-        <p>Ожидаемый доход от ежемесячных инвестиций</p>
+        <p>Ожидаемый доход от полугодовых инвестиций</p>
         <p className="font-bold text-[28px]"> ${totalAmountPerSixMonth}</p>
       </div>
     </div>
