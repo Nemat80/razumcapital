@@ -25,6 +25,8 @@ interface UpdateParams {
   perMonth: string;
 }
 
+
+
 export async function createInvestment({
   amount,
   investor,
@@ -124,21 +126,42 @@ export async function deleteInvestment(id: string): Promise<void> {
   }
 }
 
-
-
-
-
-export async function getInvestmentsInfo() {
+    
+export async function getInvestmentsInfo(city:string) {
 
   try {
-
     await connectToDB();
-    const investmentsQuery = Investment.find({
-      parentId: { $in: [null, undefined] },
-    });
-   
-    const investments = await investmentsQuery.exec();
-    
+
+    let investments = [];
+
+    if (city === "")  {
+
+      const investmentsQuery = Investment.find()
+      investments = await investmentsQuery.exec() 
+
+    } else {
+      const investmentsQuery = Investment.aggregate([
+        {
+          $lookup: {
+              from: "users", 
+              localField: "investor", 
+              foreignField: "_id", 
+              as: "user",
+            },
+          },
+          {
+            $match: {
+              "user.city": city,
+            },
+          },
+        ]);
+        investments = await investmentsQuery.exec() 
+    }
+
+
+
+
+
     let totalSum = 0;
 
     let perMonthCount = 0;
@@ -176,7 +199,7 @@ export async function getInvestmentsInfo() {
 
     
     return { 
-      investments, 
+      investments,
       totalSum, 
       totalLength, 
       perMonthCount, 

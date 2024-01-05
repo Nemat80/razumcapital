@@ -21,6 +21,8 @@ export default async function AdminCharts() {
         </Link>
 
         <p className="head-text">Статистика инвестиций и инвесторов</p>
+          
+
       </div>
       <AdminPieCharts />
       <TotalAmountCard />
