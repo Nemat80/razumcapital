@@ -1,6 +1,6 @@
 "use client"
 
-import SignUpForm from '@/Components/shared/CreateUserForm'
+import AutoAuthUser from '@/Components/shared/AuthUser/AutoAuthUser'
 import { Button } from '@/Components/ui/button'
 import { useRouter } from 'next/navigation'
 import React from 'react'
@@ -17,7 +17,7 @@ export default function page() {
         </Button>
         <p className='head-text text-center pb-8'>Авторизация пользователя</p>
       </div>
-      <SignUpForm  />
+      <AutoAuthUser />
     </section>
   )
 }

@@ -125,13 +125,14 @@ export default function CreateInvestmentForm( {objectId, user, pathname}:Props) 
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="date"
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-3">
                 <FormLabel className="text-base-semibold text-light-2">
-                  Дата
+                  Датат
                 </FormLabel>
                 <FormControl className="no-focus border border-dark-4">
                   <Input

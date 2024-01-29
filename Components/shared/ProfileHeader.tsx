@@ -36,9 +36,9 @@ export default  function ProfileHeader({objectId}:Props) {
     const { name, lastname, bio }:Info = user;
   
     return (
-      <div className="flex  gap-4 border-l px-2 text-light-2">
-        <p>{name}</p>
+      <div className="flex items-center gap-4 border-l px-2 text-light-2">
         <p>{lastname}</p>
+        <p>{name}</p>
         <p>{bio}</p>
       </div>
     );

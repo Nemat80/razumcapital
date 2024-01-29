@@ -182,7 +182,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
               </p>
             </div>
 
-            <div className="flex-col border-r border-current pr-3">
+            <div className="flex flex-col items border-r border-current pr-3">
               <legend className="text-[14px]">Прибль за 3 года</legend>
               <p>{(investment.amount * 0.05 * 33).toFixed(2)} $</p>
             </div>
@@ -254,7 +254,7 @@ const TableInvestments: React.FC<TableProps> = ({ investments }) => {
               </p>
             </div>
 
-            <div className="flex-col border-r border-current pr-3">
+            <div className="flex flex-col  border-r border-current pr-3">
               <legend className="text-[14px]">Прибль за 3 года</legend>
               <p> {totalAmount.toFixed(2)}$ </p>
             </div>

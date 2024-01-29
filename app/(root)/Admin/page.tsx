@@ -31,13 +31,18 @@ export default async function Admin({
           <h1 className="head-text ">Панель Админа</h1>
 
           <div className="flex gap-2">
+          {/* <Link href={"/Admin/Requests"}>
+              <Button className="flex bg-dark-2 text-[14px] text-center p-2">
+                Вывод 
+              </Button>
+            </Link> */}
           <Link href={"/Admin/AdminCharts"}>
-              <Button className="flex bg-blue text-[14px] text-center p-2">
+              <Button className="flex bg-dark-2  text-[14px] text-center p-2">
                 Статистика
               </Button>
             </Link>
             <Link href={"/Admin/CreateUser"}>
-              <Button className="flex bg-green-400 text-[14px] text-center p-2">
+              <Button className="flex bg-dark-2  text-[14px] text-center p-2">
                 Создать профиль
               </Button>
             </Link>

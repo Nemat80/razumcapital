@@ -6,7 +6,7 @@ const investmentSchema = new mongoose.Schema({
       type: Number,
       required: true, 
     },
-    investor: {
+    investor: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
@@ -16,11 +16,14 @@ const investmentSchema = new mongoose.Schema({
       required: true,
     },
     contract: {type: String},
+    requests: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Requests',
+    }],  
     perMonth: {
       type: String,
       default: "PER_SIX_MONTH",
     },
-  
   });
   
   const Investment = mongoose.models.Investment || mongoose.model('Investment', investmentSchema);

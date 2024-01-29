@@ -4,298 +4,381 @@ import { useEffect, useState } from "react";
 import { useSignUp } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { usePathname, useRouter } from "next/navigation";
 import { fetchUser, updateUser } from "@/lib/actions/user.actions";
 import Link from "next/link";
+import { CreateUserValidation } from "@/lib/validations/createUser";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-
-export default  function SignUpForm() {
-
-
+export default function SignUpForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompliting, setIsCompliting] = useState(false);
 
-
-
-
   const [createdUserId, setCreatedUserId] = useState("");
   const [id, setId] = useState("");
 
-
   useEffect(() => {
-
     const fetchUserInfo = async () => {
       try {
         const userInfo = await fetchUser(createdUserId);
-        setId(userInfo._id); 
+        setId(userInfo._id);
       } catch (error) {
-        console.error('Ошибка при получении информации о пользователе', error);
+        console.error("Ошибка при получении информации о пользователе", error);
       }
     };
 
-    fetchUserInfo();  
+    fetchUserInfo();
   }, [createdUserId]);
 
 
 
-
-
   const { isLoaded, signUp } = useSignUp();
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [name, setName] = useState("");
-  const [bio, setBio] = useState("");
-  const [mail, setMail] = useState("");
-  const [city, setCity] = useState("");
-  const [passport_series, setPassport_series] = useState("");
-  const [passport_number, setPassport_number] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
 
   const [pendingVerification, setPendingVerification] = useState(false);
 
   const router = useRouter();
   const pathname = usePathname();
 
-  // start the sign up process.
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const form = useForm({
+    resolver: zodResolver(CreateUserValidation), 
+    defaultValues: {
+      password: "",
+      profile_photo: "",
+      name: "",
+      lastname: "",
+      bio:  "",
+      mail:  "",
+      tel: "",
+      city: "",
+      passport_series: "",
+      passport_number: "",
+      cardNumber: "",
+    },
+  });
 
+  const onSubmit = async (values: z.infer<typeof CreateUserValidation>) => {
     setIsSubmitting(true);
 
     if (!isLoaded) {
       return;
     }
 
-    try { 
+    try {
       const signUpResponse = await signUp.create({
-        phoneNumber,
-        password,
+        phoneNumber: values.tel,
+        password: values.password,
       });
 
       const signUpId = signUpResponse.createdUserId;
       if (!signUpId) return "";
 
-
-      setCreatedUserId(signUpId)
+      setCreatedUserId(signUpId);
 
       await updateUser({
         userId: signUpId,
-        lastname: lastname,
-        name: name,
-        bio: bio,
+        lastname: values.lastname,
+        name: values.name,
+        bio: values.bio,
         image:
           "https://img.clerk.com/eyJ0eXBlIjoiZGVmYXVsdCIsImlpZCI6Imluc18yVGpVUTdCMW5JWkV3OFFhQTRZdGMzYlU0SWgiLCJyaWQiOiJ1c2VyXzJWa2JoVVdtZkg4djRWUHE3Y3BsWGZFZmEzbSJ9",
         path: pathname,
         role: "USER",
-        mail: mail,
-        tel: phoneNumber,
-        city: city,
-        passport_series: passport_series,
-        passport_number: passport_number,
-        cardNumber: cardNumber,
+        mail: values.mail,
+        tel: values.tel,
+        city: values.city,
+        passport_series: values.passport_series,
+        passport_number: values.passport_number,
+        cardNumber: values.cardNumber,
       });
 
       setPendingVerification(true);
 
-
-
-      setIsCompliting(true)
+      setIsCompliting(true);
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
     }
   };
 
-
   return (
     <>
-    {isCompliting ? (
-      <div className="flex flex-col gap-5 justify-center">
+      {isCompliting ? (
+        <div className="flex flex-col gap-5 justify-center">
           <Button className="bg-primary-500" onClick={router.back}>
-          назад
-        </Button>
-        <Link  href={{ pathname: '/Admin/UserInfo', query: { id } }}>
-        <Button className="bg-green-500 w-full"  >
-          Добавить инвестицию
-        </Button>
-      </Link>
-      </div>
-    ): (
-    <>
-    <div>
-      {!pendingVerification && (
-        <form className="flex flex-col gap-5">
-          <div className="flex  gap-2 w-full">
-            <div className="w-1/2 flex flex-col gap-3">
-              <Label
-                className="text-base-semibold text-light-2"
-                htmlFor="phone"
-              >
-                Номер телефона
-              </Label>
-              <Input
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                id="tel"
-                name="tel"
-                type="tel"
-                required
-                placeholder="+998"
-                className="account-form_input no-focus"
-              />
-            </div>
-            <div className="w-1/2 flex flex-col gap-3">
-              <Label
-                className="text-base-semibold text-light-2"
-                htmlFor="password"
-              >
-                Пароль
-              </Label>
-              <Input
-                onChange={(e) => setPassword(e.target.value)}
-                className="account-form_input no-focus"
-                id="password"
-                name="password"
-                type="text"
-                required
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-light-2" htmlFor="lastnmae">
-              Фамилия
-            </Label>
-            <Input
-              className="account-form_input no-focus "
-              onChange={(e) => setLastname(e.target.value)}
-              id="lastName"
-              name="lastName"
-              type="text"
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-light-2" htmlFor="name">
-              Имя
-            </Label>
-            <Input
-              onChange={(e) => setName(e.target.value)}
-              className="account-form_input no-focus "
-              id="name"
-              name="name"
-              type="text"
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-light-2" htmlFor="bio">
-              Отчество
-            </Label>
-            <Input
-              className="account-form_input no-focus "
-              onChange={(e) => setBio(e.target.value)}
-              id="bio"
-              name="bio"
-              type="text"
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-light-2" htmlFor="mail">
-              Email
-            </Label>
-            <Input
-              onChange={(e) => setMail(e.target.value)}
-              className="account-form_input no-focus "
-              id="email"
-              name="email"
-              type="email"
-              placeholder="some@mail.com"
-              required
-            />
-          </div>
+            назад
+          </Button>
+          <Link href={{ pathname: "/Admin/UserInfo", query: { id } }}>
+            <Button className="bg-green-500 w-full">Добавить инвестицию</Button>
+          </Link>
+        </div>
+      ) : (
+        <>
+          <div>
+            {!pendingVerification && (
+              <>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="flex flex-col rounded-md justify-start gap-10"
+                >
+                  <div className="flex  gap-2 w-full">
+                    <FormField
+                      control={form.control}  
+                      name="tel"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Номер телефона
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="tel"
+                              placeholder="+998"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="w-1/2 flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Пароль
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="password"
+                              placeholder=""
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    /> 
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="lastname"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Фамилия
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="lastname"
+                              placeholder=""
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Имя
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="name"
+                              placeholder=""
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="bio"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Отчество
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="bio"
+                              placeholder=""
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="mail"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Email
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="mail"
+                              placeholder="some@mail.com"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-          <div className="flex gap-2">
-            <div className="flex flex-col gap-3 w-1/2">
-              <Label className="text-light-2 " htmlFor="passport_series">
-                Серия паспорта
-              </Label>
-              <Input
-                className="account-form_input no-focus"
-                onChange={(e) => setPassport_series(e.target.value)}
-                id="passport_series"
-                name="passport_series"
-                type="text"
-                required
-                placeholder="AA"
-              />
-            </div>
-            <div className="w-1/2 flex flex-col gap-3">
-              <Label className="text-light-2" htmlFor="passport_number">
-                Номер паспорта
-              </Label>
-              <Input
-                className="account-form_input no-focus"
-                onChange={(e) => setPassport_number(e.target.value)}
-                id="passport_number"
-                name="passport_number"
-                type="text"
-                placeholder="1234567"
-                required
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-light-2" htmlFor="cardNumber">
-              Номер карты
-            </Label>
-            <Input
-              className="account-form_input no-focus "
-              onChange={(e) => setCardNumber(e.target.value)}
-              id="cardNumber"
-              name="cardNumber"
-              type="text"
-              required
-              placeholder="1...16"
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <Label className="text-light-2" htmlFor="city">
-              Город
-            </Label>
-            <Input
-              className="account-form_input no-focus "
-              onChange={(e) => setCity(e.target.value)}
-              id="city"
-              name="city"
-              type="text"
-              placeholder="Ташкент"
-              required
-            />
-          </div>
+                  <div className="flex gap-2">
+                    <div className="flex flex-col gap-3 w-1/2">
+                      <FormField
+                        control={form.control}
+                        name="passport_series"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col w-full gap-3">
+                            <FormLabel className="text-base-semibold text-light-2">
+                              Серия паспорта
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                className="account-form_input no-focus"
+                                type="passport_series"
+                                placeholder=""
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="w-1/2 flex flex-col gap-3">
+                      <FormField
+                        control={form.control}
+                        name="passport_number"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col w-full gap-3">
+                            <FormLabel className="text-base-semibold text-light-2">
+                              Серия паспорта
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                className="account-form_input no-focus"
+                                type="passport_number"
+                                placeholder=""
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="cardNumber"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Номер карты
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="cardNumber"
+                              placeholder=""
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col w-full gap-3">
+                          <FormLabel className="text-base-semibold text-light-2">
+                            Город
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="account-form_input no-focus"
+                              type="city"
+                              placeholder=""
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
 
-          {isSubmitting ? (
-            <Button className="bg-green-500 pt-2">
-              <div
-                className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                role="status"
-              >
-                <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                  Loading...
-                </span>
-              </div>
-            </Button>
-          ) : (
-            <Button type="submit" onClick={handleSubmit} className="bg-green-500 pt-2">
-              Добавить
-            </Button>
-          )}
-        </form>
+                  {isSubmitting ? (
+                    <Button className="bg-green-500 pt-2">
+                      <div
+                        className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                        role="status"
+                      >
+                        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                          Loading...
+                        </span>
+                      </div>
+                    </Button>
+                  ) : (
+                    <Button  type="submit" className="bg-green-500 pt-2">
+                      Добавить
+                    </Button>
+                  )}
+                </form>
+              </Form>
+              </>
+            )}
+          </div>
+        </>
       )}
-      
-    </div>
-    </>)}
     </>
-  )
+  );
 }

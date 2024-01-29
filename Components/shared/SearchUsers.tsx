@@ -19,7 +19,7 @@ export default function SearchUsers({ userId, searchParams }: Props) {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
       setCity(e.target.value);
-    }, 1500);
+    }, 200);
   };
 
   useEffect(() => {
@@ -74,7 +74,6 @@ export default function SearchUsers({ userId, searchParams }: Props) {
                 lastName={person.lastname}
                 imgUrl={person.image}
                 bio={person.bio}
-                personType={person.role}
               />
             ))}
           </>

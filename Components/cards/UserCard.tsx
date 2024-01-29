@@ -1,4 +1,5 @@
 "use client"
+
 import Image from "next/image";
 import { Button } from "../ui/button";
 
@@ -10,25 +11,19 @@ interface Props {
   name: string;
   lastName: string;
   imgUrl: string;
-  personType: string;
   bio:string;
 }
 
 
-const  UserCard =   ({
+const UserCard = ({
   id,
   imgUrl,
   name,
   lastName,
-  personType,
   bio
 }: Props) => {
 
-
-
-
-  const stringId = id.toString();
-
+const stringId = id.toString();
 
   return (
     <article className="user-card border-2 rounded-xl border-stone-300 p-4 responsive_text text-light-1 font-bold" key={stringId}>
@@ -47,7 +42,6 @@ const  UserCard =   ({
         </div>
         <div className="flex gap-4 text-ellipsis">
           <h4 className="">{bio}</h4> 
-          <h4 className="">{personType}</h4> 
         </div>
       </div> 
       <Link href={{ pathname: '/Admin/UserInfo', query: { id } }}>

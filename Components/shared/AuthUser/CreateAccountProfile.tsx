@@ -22,35 +22,38 @@ import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 
 interface Props {
+  onComplete: () => void;
+
   user: {
     id: string;
-    objectId: string;
+    objectId: string | undefined; // сделали свойство допускающим неопределенные значения
     lastname: string;
     name: string;
     bio: string;
     image: string;
-    role: string; 
-    mail:string;
-    tel: string;
-    city: string;
-    passport_series: string;
-    passport_number:string;
-    cardNumber:string
+    role: string;
+    mail: string | undefined; // сделали свойство допускающим неопределенные значения
+    tel: string | undefined; // сделали свойство допускающим неопределенные значения
+    city: string | undefined; // сделали свойство допускающим неопределенные значения
+    passport_series: string | undefined; // сделали свойство допускающим неопределенные значения
+    passport_number: string | undefined; // сделали свойство допускающим неопределенные значения
+    cardNumber: string | undefined; // сделали свойство допускающим неопределенные значения
   };
 }
 
-const AccountProfile = ({ user }: Props) => {
-
+const CreateAccountProfile = ({ user, onComplete }: Props) => {
   const { startUpload } = useUploadThing({ endpoint: "file" });
   const [files, setFiles] = useState<File[]>([]);
 
-  const router = useRouter();
-  const pathname = usePathname(); 
+  const [show, setShow] = useState(true);
+
+  const pathname = usePathname();
+
   const form = useForm({
-    resolver: zodResolver(UserValidation), 
+    resolver: zodResolver(UserValidation),
     defaultValues: {
       profile_photo: user?.image || "",
-      name: user?.name || "", 
+      name: user?.name || "",
       lastname: user?.lastname || "",
       bio: user?.bio || "",
       mail: user?.mail || "",
@@ -63,6 +66,8 @@ const AccountProfile = ({ user }: Props) => {
   });
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
+    setShow(false);
+
     const blob = values.profile_photo;
 
     const hasImageChanged = isBase64Image(blob);
@@ -89,15 +94,8 @@ const AccountProfile = ({ user }: Props) => {
       passport_number: values.passport_number,
       cardNumber: values.cardNumber,
     });
-    if (pathname === "/Admin/UserInfo") {
-      window.location.reload();    
-    }
-    
-    if (pathname === "/profile/edit") {
-      router.back();
-    } else {
-      router.push("/");
-    }
+
+    onComplete();
   };
 
   const handleImage = (
@@ -189,7 +187,7 @@ const AccountProfile = ({ user }: Props) => {
             )}
           />
           <FormField
-            control={form.control} 
+            control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-3">
@@ -223,7 +221,7 @@ const AccountProfile = ({ user }: Props) => {
               </FormItem>
             )}
           />
-  
+
           <FormField
             control={form.control}
             name="mail"
@@ -243,9 +241,9 @@ const AccountProfile = ({ user }: Props) => {
                 <FormMessage />
               </FormItem>
             )}
-          /> 
+          />
           <FormField
-            control={form.control} 
+            control={form.control}
             name="tel"
             render={({ field }) => (
               <FormItem className="flex flex-col w-full gap-3">
@@ -257,7 +255,7 @@ const AccountProfile = ({ user }: Props) => {
                     className="account-form_input no-focus"
                     type="tel"
                     placeholder="+998"
-                    {...field} 
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -346,13 +344,15 @@ const AccountProfile = ({ user }: Props) => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="bg-primary-500">
+          {show ? (
+            <Button type="submit" className="bg-primary-500">
               Продолжить
-          </Button>
+            </Button>
+          ) : null}
         </form>
       </Form>
     </div>
   );
 };
 
-export default AccountProfile;
+export default CreateAccountProfile;

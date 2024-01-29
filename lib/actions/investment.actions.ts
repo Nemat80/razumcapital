@@ -15,6 +15,8 @@ interface Params {
   contract: string;
   perMonth: string;
 }
+
+
 interface UpdateParams {
   objectId:string
   amount: number;
@@ -88,6 +90,7 @@ export async function UpdateInvestment({
   }
   revalidatePath(path);
 }
+
 
 export async function fetchInvestments(pageNumber = 1, pageSize = 100) {
   connectToDB();
@@ -181,7 +184,7 @@ export async function getInvestmentsInfo(city:string) {
     }, {});
 
     const yearlyData = Object.entries(yearlyAmounts).map(([year, amount]) => ({
-      date: year,
+      date: year, 
       amountFullYear: amount,
     }));
 
@@ -275,5 +278,25 @@ export async function getInvestmentsByUserId(userId: string) {
 
   } catch (error: any) {
     throw new Error(`Failed to find investments by user id: ${error.message}`);
+  }
+}
+
+export async function getInvestmentsInfoByUserId(userId: string) {
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const investments = await Investment.find({ investor: userId });
+
+
+    return {
+      investments,
+    };
+
+  } catch (error: any) {
+    throw new Error(`Failed to find investments info by user id: ${error.message}`);
   }
 }

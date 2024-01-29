@@ -1,13 +1,12 @@
 "use client";
 
-import {  redirect, useSearchParams } from "next/navigation";
+import {  useSearchParams } from "next/navigation";
 import { Button } from "@/Components/ui/button";
 
 import { usePathname } from "next/navigation";
 
 import React, { useEffect, useState } from "react";
 import {
-  fetchUser,
   fetchUserInfo,
   findInvestmentsByUserId,
 } from "@/lib/actions/user.actions";
@@ -21,7 +20,6 @@ import Image from "next/image";
 import UserProfile from "@/Components/shared/UserProfile";
 import AccountProfile from "@/Components/forms/AccoutnProfile";
 import CreateInvestmentForm from "@/Components/forms/CreateInvestmentForm";
-import { currentUser } from "@clerk/nextjs";
 
 
 
@@ -40,7 +38,6 @@ interface investments extends Document {
 
 
 export default function UserInfo() {
-
 
   const router = useRouter();
   const pathname = usePathname();
