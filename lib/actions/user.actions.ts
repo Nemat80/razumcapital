@@ -152,6 +152,7 @@ export async function fetchUsers({
     const isNext = totalUsersCount > skipAmount + users.length;
 
     return { users, isNext };
+    
   } catch (error) {
     console.error("Error fetching users:", error);
     throw error;

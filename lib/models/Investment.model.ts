@@ -13,12 +13,12 @@ const investmentSchema = new mongoose.Schema({
     },
     date: {
       type: String,
-      required: true,
+      required: true, 
     },
     contract: {type: String},
-    requests: [{
+    irequests: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Requests',
+      ref: 'IRequest',
     }],  
     perMonth: {
       type: String,

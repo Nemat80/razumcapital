@@ -9,7 +9,7 @@ import SearchUsers from "@/Components/shared/SearchUsers";
 export default async function Admin({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: {[key: string]: string | undefined };
 }) {
   const user = await currentUser();
   if (!user) return null;
@@ -33,7 +33,7 @@ export default async function Admin({
           <div className="flex gap-2">
           {/* <Link href={"/Admin/Requests"}>
               <Button className="flex bg-dark-2 text-[14px] text-center p-2">
-                Вывод 
+                Вывод
               </Button>
             </Link> */}
           <Link href={"/Admin/AdminCharts"}>

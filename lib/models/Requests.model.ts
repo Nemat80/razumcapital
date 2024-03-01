@@ -33,6 +33,6 @@ const requestSchema = new mongoose.Schema({
 })
 
 
-const Request = mongoose.models.Request || mongoose.model("Requests", requestSchema);
+const IRequest = mongoose.models.IRequest || mongoose.model("IRequest", requestSchema);
 
-export default Request;
+export default IRequest;

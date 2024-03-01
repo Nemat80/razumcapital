@@ -2,10 +2,10 @@ import * as z from "zod";
 
 export const RequestValidation = z.object({
   investmentId: z.string(),
-  index: z.number().or(z.string().regex(/^\d+$/).transform(Number)),
+  index: z.number(),
   amount: z.number().or(z.string().regex(/^\d+$/).transform(Number)),
   method: z.string(),
   initials: z.string().max(34),
-  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  date: z.date(), 
   status: z.string(),
 });

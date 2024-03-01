@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         required: true    
       },
       passport_series: {
-        type: String,
+        type: String, 
         required: true    
       },  
       passport_number: {

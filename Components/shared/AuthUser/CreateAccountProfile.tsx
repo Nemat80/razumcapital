@@ -47,7 +47,7 @@ const CreateAccountProfile = ({ user, onComplete }: Props) => {
 
   const [show, setShow] = useState(true);
 
-  const pathname = usePathname();
+  const pathname = usePathname(); 
 
   const form = useForm({
     resolver: zodResolver(UserValidation),

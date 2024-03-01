@@ -18,7 +18,7 @@ interface Params {
 
 
 interface UpdateParams {
-  objectId:string
+  objectId:string;
   amount: number;
   investor: string;
   date: string;
@@ -160,10 +160,6 @@ export async function getInvestmentsInfo(city:string) {
         ]);
         investments = await investmentsQuery.exec() 
     }
-
-
-
-
 
     let totalSum = 0;
 
