@@ -6,6 +6,7 @@ import User from "../models/user.model";
 import { connectToDB } from "./mongoose";
 import { UserValidation } from "../validations/user";
 import Investment from "../models/Investment.model";
+import { fetchRequestsNotifications } from "./request.action";
 
 interface Params {
   userId: string;
@@ -93,6 +94,9 @@ export async function updateUser({
   }
 }
 
+
+
+
 export async function fetchUsers({
   userId,
   searchString = "",
@@ -158,6 +162,8 @@ export async function fetchUsers({
     throw error;
   }
 }
+
+
 
 export const getAllUsers = async () => {
   const users = await User.find();

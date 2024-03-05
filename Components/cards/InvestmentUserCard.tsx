@@ -66,7 +66,7 @@ useEffect(() => {
           <h4 className="">Статус</h4> 
         </div>
       </div> 
-      <Link href={{ pathname: '/Admin/Requests/UserRequest', query: { id } }}>
+      <Link href={{ pathname: '/Requests/UserRequest', query: { id } }}>
       <Button className="community-card_btn">
         Инвестиции
       </Button>

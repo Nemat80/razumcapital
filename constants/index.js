@@ -24,6 +24,7 @@ export  const sidebarLinks = [
   
   export const userTabs = [
     { value: "investments", label: "Инвестиции", icon: "/assets/tag.svg" },
+    { value: "request", label: "Выводы", icon: "/assets/request.svg" },
     { value: "user", label: "Профиль", icon: "/assets/user.svg" },
   ];
   

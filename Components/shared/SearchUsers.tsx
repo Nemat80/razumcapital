@@ -1,11 +1,12 @@
 "use client";
 
 import { fetchUsers } from "@/lib/actions/user.actions";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import UserCard from "../cards/UserCard";
 import Searchbar from "./SearchBar";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import Pagination from "./Pagination";
 
 interface Props {
   userId: string;
@@ -13,32 +14,50 @@ interface Props {
 }
 
 export default function SearchUsers({ userId, searchParams }: Props) {
-  const [result, setResult] = useState<{ users: any[]; isNext: boolean }>();
+  const [result, setResult] = useState<{ users: any[]; isNext: boolean;  }>(() => {
+
+    const cachedResult = sessionStorage.getItem('searchResults')
+    try {
+      return cachedResult !== null ? JSON.parse(cachedResult) : { users: [], isNext: false }
+    } catch (error) {
+      console.error("Ошибка разбора JSON:", error)
+      return { users: [], isNext: false }
+    }
+  })
+
+
+
   const [city, setCity] = useState("");
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTimeout(() => {
-      setCity(e.target.value);
-    }, 200);
-  };
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCity(value); 
+  }, []);
 
   useEffect(() => {
     async function getUsers() {
       try {
         const result = await fetchUsers({
           userId: userId,
-          searchString: searchParams?.q || "",
+          searchString: searchParams.q || "",
+          pageSize: 20, 
           pageNumber: searchParams?.page ? +searchParams.page : 1,
-          pageSize: 20,
           city: city,
-        });
-        setResult(result);
+        })
+        .then((json) => setResult(json))
+
+        
+        sessionStorage.setItem('searchResults', JSON.stringify(result));
       } catch (error) {
         console.error(error);
       }
     }
 
     getUsers();
+  }, [searchParams, city, userId]);
+
+  useEffect(() => {
+    setResult(prevResult => ({ ...prevResult, isNext: true }));
   }, [searchParams, city]);
 
   return (
@@ -55,11 +74,16 @@ export default function SearchUsers({ userId, searchParams }: Props) {
           Бухара
         </Button>
         <div className="">
-          <Input type="text" className="text-light-1 bg-black" placeholder="Другие города..." onChange={handleInputChange} />
+          <Input
+            type="text"
+            className="text-light-1 bg-black"
+            placeholder="Другие города..."
+            onChange={handleInputChange}
+          />
         </div>
       </div>
 
-      <div className="mt-14 flex flex-col gap-9">
+      <div className="mt-14 flex flex-col gap-4">
         {result === undefined ? (
           <div>Loading...</div>
         ) : result.users.length === 0 ? (
@@ -79,6 +103,11 @@ export default function SearchUsers({ userId, searchParams }: Props) {
           </>
         )}
       </div>
+      <Pagination
+        path="Admin"
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result?.isNext ?? false} 
+      />
     </div>
   );
 }

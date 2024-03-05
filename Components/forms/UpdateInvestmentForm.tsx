@@ -93,7 +93,7 @@ export default function UpdateInvestmentForm( { objectId, userId, amount, date, 
       };
 
       fileReader.readAsDataURL(file);
-    }
+    } 
   };
 
   return (

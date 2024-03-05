@@ -3,18 +3,18 @@
 import IRequest from "../models/Requests.model";
 import { connectToDB } from "./mongoose";
 import Investment from "../models/Investment.model";
-
+import { getInvestmentsInfoByUserId } from "./investment.actions";
 
 interface UpdatedParams {
-  objectId:string;
-  investmentId:string;
+  objectId: string;
+  investmentId: string;
   index: number;
   date: Date;
   method: string;
   initials: string;
   amount: number;
-  status: string; 
-} 
+  status: string;
+}
 
 interface Params {
   investmentId: string;
@@ -26,7 +26,8 @@ interface Params {
   status: string;
 }
 
-export async function createRequest({ 
+
+export async function createRequest({
   investmentId,
   index,
   method,
@@ -35,7 +36,6 @@ export async function createRequest({
   date,
   status,
 }: Params) {
-
   connectToDB();
   try {
     const createRequest = await IRequest.create({
@@ -49,15 +49,12 @@ export async function createRequest({
     });
 
     await Investment.findByIdAndUpdate(investmentId, {
-      $push: { irequests: createRequest._id }
-    })
-
-
+      $push: { irequests: createRequest._id },
+    });
   } catch (error: any) {
     throw new Error(`Error creating Requests ${error.message}`);
   }
 }
-
 
 export async function UpdateRequests({
   objectId,
@@ -72,51 +69,93 @@ export async function UpdateRequests({
   connectToDB();
 
   try {
-
     const updatedRequst = await IRequest.findOneAndUpdate(
       { _id: objectId },
-     { investmentId,
-      index,
-      date,
-      method,
-      initials,
-      amount,
-      status,
-    }
+      { investmentId, index, date, method, initials, amount, status }
     );
 
     await Investment.findByIdAndUpdate(investmentId, {
-      $push: { irequests: updatedRequst._id }
+      $push: { irequests: updatedRequst._id },
     });
   } catch (error: any) {
     throw new Error(`Error updating Requst ${error.message}`);
   }
 }
 
+export async function getRequestsByInvestmentId(investmentId: string) {
+  try {
+    connectToDB();
 
+    const requests = await IRequest.find({ investmentId: investmentId });
 
-
-
-  export async function getRequestsByInvestmentId(investmentId: string) {
-    try {
-
-
-      const requests = await IRequest.find({ investmentId: investmentId });
-
-      return requests
-  
-    } catch (error: any) {
-      throw new Error(`Failed to find requests info by user id: ${error.message}`);
-    }
-  }
-
-
-  export async function createMultipleRequests(paramsArray: Params[]) {
-    // Используем Promise.all для выполнения всех асинхронных операций параллельно
-    await Promise.all(
-      // Маппируем каждый элемент массива в промис, который вызывает функцию createRequest с соответствующими параметрами
-      paramsArray.map((params) => createRequest(params))
+    return requests;
+  } catch (error: any) {
+    throw new Error(
+      `Failed to find requests info by user id: ${error.message}`
     );
-    // Возвращаем сообщение об успешном создании объектов IRequest
-    return "Successfully created 6 IRequest objects";
   }
+}
+
+export async function createMultipleRequests(paramsArray: Params[]) {
+  await Promise.all(paramsArray.map((params) => createRequest(params)));
+  return "Successfully created 6 IRequest objects";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// export async function fetchRequestsNotifications(userId: string): Promise<string> {
+//   try {
+//       const { investments } = await getInvestmentsInfoByUserId(userId)
+//       const requestsPromises = investments.map(investment => getRequestsByInvestmentId(investment._id))
+//       const requestsResults = await Promise.all(requestsPromises)
+
+//       for (const requests of requestsResults) {
+//           if (requests.length > 0) {
+//               const hasApprovedRequests = requests.every(request => request.status === "approved")
+//               if (hasApprovedRequests) {
+//                   return "green"; 
+//               }
+//           }
+//       }
+
+//       return "orange"; 
+//   } catch (error) {
+//       console.error('Error fetching requests notifications:', error)
+//       return "white"
+//   }
+// }
+
+
+export async function fetchRequestsNotifications(userId: string): Promise<string> {
+  try {
+    const { investments } = await getInvestmentsInfoByUserId(userId);
+
+    // Выполняем запросы параллельно
+    const requestsPromises = investments.map(investment => getRequestsByInvestmentId(investment._id));
+    const requestsResults = await Promise.allSettled(requestsPromises);
+
+    // Проверяем, все ли запросы одобрены хотя бы для одного инвестиционного объекта
+    const anyInvestmentHasApprovedRequests = requestsResults.some(result => {
+      if (result.status === 'fulfilled') {
+        const requests = result.value;
+        return requests.some(request => request.status === 'approved');
+      }
+      return false;
+    });
+
+    return anyInvestmentHasApprovedRequests ? 'green' : 'orange';
+  } catch (error) {
+    console.error('Error fetching requests notifications:', error);
+    return 'white';
+  }
+}

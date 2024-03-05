@@ -20,34 +20,22 @@ export default function InvestmentsCard({
   const [show, setShow] = useState(false);
   const toggleShow = () => setShow(!show);
 
-  const investType =
-    perMonth === "PER_SIX_MONTH" ? "С реинвестицией" : "Без реинвестиции";
+  const investType = perMonth === "PER_SIX_MONTH" ? "С реинвестицией" : "Без реинвестиции"
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   let cycles = 0;
 
   if (perMonth === "PER_SIX_MONTH") {
-    // Считаем количество циклов инвестиций
     for (let year = currentYear; year < currentYear + 3; year++) {
       for (let month = 0; month < 12; month++) {
-        // Исключаем декабрь из цикла
         if (month !== 11) {
           cycles++;
         }
       }
     }
-  }
-
-  if (perMonth === "PER_MONTH") {
-    for (let year = currentYear; year < currentYear + 3; year++) {
-      for (let month = 0; month < 12; month++) {
-        // Исключаем декабрь из цикла
-        if (month !== 11) {
-          cycles++;
-        }
-      }
-    }
+  }else {
+    return null
   }
 
   return (

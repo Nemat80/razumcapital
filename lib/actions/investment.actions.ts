@@ -62,7 +62,7 @@ export async function createInvestment({
 
 export async function UpdateInvestment({
   objectId,
-  amount,
+  amount, 
   investor,
   date,
   contract,
@@ -216,6 +216,7 @@ export async function getInvestmentsInfo(city:string) {
 
 export async function getInvestmentsByUserId(userId: string) {
   try {
+    connectToDB();
     const user = await User.findById(userId);
 
     if (!user) {
@@ -279,6 +280,8 @@ export async function getInvestmentsByUserId(userId: string) {
 
 export async function getInvestmentsInfoByUserId(userId: string) {
   try {
+    connectToDB();
+
     const user = await User.findById(userId);
 
     if (!user) {

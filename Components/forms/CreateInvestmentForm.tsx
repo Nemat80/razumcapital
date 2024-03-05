@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import {
   Form,
   FormControl,
@@ -25,7 +25,7 @@ interface Props {
 
 
 
-export default function CreateInvestmentForm( {objectId, user, pathname}:Props) {
+export default function CreateInvestmentForm( {objectId, user, pathname }:Props) {
 
   const form = useForm({
     resolver: zodResolver(InvestmentValidation),
@@ -42,6 +42,9 @@ export default function CreateInvestmentForm( {objectId, user, pathname}:Props) 
   const { startUpload } = useUploadThing({ endpoint: "file" });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+
+
   const onSubmit = async (values: z.infer<typeof InvestmentValidation>) => {
     setIsSubmitting(true);
 
@@ -70,8 +73,7 @@ export default function CreateInvestmentForm( {objectId, user, pathname}:Props) 
       contract: "",
       perMonth: "",
     });
-
-    window.location.reload();
+    window.location.reload()
   };
 
   const handleFileChange = (

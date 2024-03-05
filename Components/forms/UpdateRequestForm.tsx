@@ -1,5 +1,4 @@
 import { UpdateRequests } from "@/lib/actions/request.action";
-import { RequestValidation } from "@/lib/validations/request";
 import { z } from "zod";
 import {
   Form,
@@ -15,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import Modal from "../Modal/Modal";
+import { UpdateRequestValidation } from "@/lib/validations/update.requests";
 
 interface Props {
   _id: string;
@@ -38,6 +38,7 @@ export default function UpdateRequestForm({
 }: Props) {
   const [showModal, setShowModal] = useState(false);
 
+
   const openModal = () => {
     setShowModal(true);
   };
@@ -47,7 +48,7 @@ export default function UpdateRequestForm({
   };
 
   const form = useForm({
-    resolver: zodResolver(RequestValidation),
+    resolver: zodResolver(UpdateRequestValidation),
     defaultValues: {
       objectId:_id,
       investmentId: investment,
@@ -60,7 +61,8 @@ export default function UpdateRequestForm({
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof RequestValidation>) => {
+  const onSubmit = async (values: z.infer<typeof UpdateRequestValidation>) => {
+
     await UpdateRequests({
       objectId:_id,
       investmentId: investment,
@@ -72,7 +74,10 @@ export default function UpdateRequestForm({
       status: values.status,
     });
     window.location.reload();
-  };
+  }
+
+
+
 
   return (
     <div>

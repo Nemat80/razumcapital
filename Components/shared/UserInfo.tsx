@@ -1,6 +1,6 @@
 "use client";
 
-import {  useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/Components/ui/button";
 
 import { usePathname } from "next/navigation";
@@ -20,25 +20,19 @@ import Image from "next/image";
 import UserProfile from "@/Components/shared/UserProfile";
 import AccountProfile from "@/Components/forms/AccoutnProfile";
 import CreateInvestmentForm from "@/Components/forms/CreateInvestmentForm";
-
-
-
+import InvestmentsCard from "../cards/InvestmentsCard";
 
 interface investments extends Document {
   id: string;
   amount: number;
   investor: Types.ObjectId;
-  date: string;
+  date: any;
   _id: string;
   contract: string;
   perMonth: string;
 }
 
-
-
-
-export default function UserInfo() {
-
+export default function UserInfoComponent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -48,6 +42,7 @@ export default function UserInfo() {
   const objectId = String(user);
 
   const [userInfo, setUserInfo] = useState<any>(null);
+  const [investments, setInvestments] = useState<investments[]>([]);
 
   useEffect(() => {
     async function getUser() {
@@ -58,6 +53,17 @@ export default function UserInfo() {
         console.error(error);
       }
     }
+
+    const fetchInvestments = async () => {
+      try {
+        const userInvestments = await findInvestmentsByUserId(user);
+        setInvestments(userInvestments);
+      } catch (error) {
+        console.error("Failed to fetch user investments:", error);
+      }
+    };
+
+    fetchInvestments();
 
     getUser();
   }, []);
@@ -84,33 +90,19 @@ export default function UserInfo() {
     cardNumber: userInfo?.cardNumber,
   };
 
-  const [investments, setInvestments] = useState<investments[]>([]);
-
-  useEffect(() => {
-    const fetchInvestments = async () => {
-      try {
-        const userInvestments = await findInvestmentsByUserId(user);
-        setInvestments(userInvestments);
-      } catch (error) {
-        console.error("Failed to fetch user investments:", error);
-      }
-    };
-
-    fetchInvestments();
-  }, []);
 
 
   return (
     <>
       <div className="flex flex-col  justify-center items-center">
-        <div className="flex items-center gap-4 border-b-2 border-stone-500  mb-5 pb-3 w-full">
+        <div className="flex items-center gap-4 border-b-2 border-stone-500  mb-3 pb-3 w-full">
           <Button className="bg-primary-500" onClick={router.back}>
             Назад
           </Button>
           <h1 className="head-text">Профиль</h1>
           <ProfileHeader objectId={objectId} />
         </div>
-        <div className="mt-9 w-full">
+        <div className="w-full">
           <Tabs defaultValue="investments" className="w-full">
             <TabsList className="tab">
               {userTabs.map((tab) => (
@@ -140,12 +132,30 @@ export default function UserInfo() {
               />
 
               {investments.length === 0 ? (
-                <p className="no-result">Инвестиций не найдено</p>
+                <p className="no-result mt-8 border-t p-4">
+                  Инвестиций не найдено
+                </p>
               ) : (
                 <div className="w-full">
                   <TableInvestments investments={investments} />
                 </div>
               )}
+            </TabsContent>
+            <TabsContent value="request" className="w-full text-light-1">
+              {investments.map((investment) => (
+                <>
+                  {investment.perMonth === "PER_SIX_MONTH" ? (
+                    <>
+                      <InvestmentsCard
+                        _id={investment._id}
+                        amount={investment.amount}
+                        date={investment.date}
+                        perMonth={investment.perMonth}
+                      />
+                    </>
+                  ) : null}
+                </>
+              ))}
             </TabsContent>
             <TabsContent value="user" className="w-full text-light-1">
               {userInfo ? (
