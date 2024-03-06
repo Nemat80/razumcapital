@@ -153,9 +153,13 @@ export default function UserInfoComponent() {
                         perMonth={investment.perMonth}
                       />
                     </>
-                  ) : null}
+                  ) : <p className="text-center  mt-3"> Истории не найдено</p>
+                  }
                 </>
               ))}
+              {investments.length === 0 ? (<div className=" text-center  mt-3">
+              Истории не найдено
+              </div>) : null}
             </TabsContent>
             <TabsContent value="user" className="w-full text-light-1">
               {userInfo ? (
