@@ -5,7 +5,7 @@ import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import UserCard from "../cards/UserCard";
 import Searchbar from "./SearchBar";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Input } from "../ui/input"; 
 import Pagination from "./Pagination";
 
 interface Props {

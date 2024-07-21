@@ -111,31 +111,6 @@ export async function createMultipleRequests(paramsArray: Params[]) {
 
 
 
-
-
-// export async function fetchRequestsNotifications(userId: string): Promise<string> {
-//   try {
-//       const { investments } = await getInvestmentsInfoByUserId(userId)
-//       const requestsPromises = investments.map(investment => getRequestsByInvestmentId(investment._id))
-//       const requestsResults = await Promise.all(requestsPromises)
-
-//       for (const requests of requestsResults) {
-//           if (requests.length > 0) {
-//               const hasApprovedRequests = requests.every(request => request.status === "approved")
-//               if (hasApprovedRequests) {
-//                   return "green"; 
-//               }
-//           }
-//       }
-
-//       return "orange"; 
-//   } catch (error) {
-//       console.error('Error fetching requests notifications:', error)
-//       return "white"
-//   }
-// }
-
-
 export async function fetchRequestsNotifications(userId: string): Promise<string> {
   try {
     const { investments } = await getInvestmentsInfoByUserId(userId);

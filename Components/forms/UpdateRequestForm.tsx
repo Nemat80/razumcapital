@@ -32,7 +32,6 @@ export default function UpdateRequestForm({
   investment,
   amount,
   initials,
-  method,
   index,
   date,
 }: Props) {

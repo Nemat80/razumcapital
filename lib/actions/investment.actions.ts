@@ -74,7 +74,7 @@ export async function UpdateInvestment({
   try {
 
     const createInvestment = await Investment.findOneAndUpdate(
-      { _id: objectId },
+     
      { amount,
       investor,
       date,

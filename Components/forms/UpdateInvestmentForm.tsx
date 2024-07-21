@@ -49,7 +49,9 @@ export default function UpdateInvestmentForm( { objectId, userId, amount, date, 
   const [file, setFile] = useState<File[]>([]);
   const { startUpload } = useUploadThing({ endpoint: "file" });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  
   const onSubmit = async (values: z.infer<typeof InvestmentValidation>) => {
     setIsSubmitting(true);
 

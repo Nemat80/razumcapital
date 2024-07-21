@@ -6,7 +6,7 @@ import User from "../models/user.model";
 import { connectToDB } from "./mongoose";
 import { UserValidation } from "../validations/user";
 import Investment from "../models/Investment.model";
-import { fetchRequestsNotifications } from "./request.action";
+
 
 interface Params {
   userId: string;
@@ -30,6 +30,7 @@ interface Investment extends Document {
   date: string;
 }
 
+
 export async function fetchUser(userId: string) {
   try {
     connectToDB();
@@ -49,6 +50,8 @@ export async function fetchUserInfo(userId: string) {
     throw new Error(`Failed to fetch user: ${error.message}`);
   }
 }
+
+
 
 export async function updateUser({
   userId,
